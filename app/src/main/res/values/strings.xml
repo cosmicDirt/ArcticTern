@@ -1,0 +1,51 @@
+<resources>
+    <string name="app_name">TelecomLocate</string>
+
+    <!--mapbox-->
+    <string name="mapbox_public_access_token">pk.eyJ1IjoibWlycm9yZHVzdCIsImEiOiJjaXNjeXc2Y3owMDBmMnpwZjd2YnZvaWZhIn0.luGgUhgNCUpyNL4cACktHA</string>
+
+    <!--main activity drawer strings-->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="drawer_image_description">Base Station</string>
+    <string name="drawer_description_head">TelecomLocate</string>
+    <string name="drawer_description_snippet">Sensor Reading Collector</string>
+    <string name="nav_test">Test availability</string>
+    <string name="nav_data">Data Management</string>
+    <string name="nav_prediction">Prediction</string>
+    <string name="nav_setting">Setting</string>
+    <string name="nav_collection_setting">Collection Setting</string>
+    <string name="nav_prediction_setting">Prediction Setting</string>
+    <string name="nav_about">About</string>
+
+    <!--activity label-->
+    <string name="activity_label_collection">Collect Data</string>
+    <string name="activity_label_detail">Detail</string>
+    <string name="activity_label_data">Manage Data</string>
+    <string name="activity_label_prediction">Prediction</string>
+
+    <!--collection activity-->
+    <string name="new_sample_placeholder">Start A New Sampling</string>
+    <string name="new_sample_number">No.</string>
+    <string name="new_sample_time">sample time</string>
+    <string name="new_sample_location">sample location</string>
+    <string name="title_action_save">Save Data</string>
+    <string name="title_action_discard">Discard Data</string>
+
+    <!--detail activity-->
+    <string name="detail_tab_title_1">Value</string>
+    <string name="detail_tab_title_2">Map</string>
+    <string name="detail_value">value</string>
+    <string name="detail_title">title</string>
+    <string name="new_sample_bs_number">base station number</string>
+
+    <string-array name="travel_mode">
+        <item>Walk</item>
+        <item>Bicycle</item>
+        <item>Subway</item>
+        <item>Taxi</item>
+        <item>Car</item>
+        <item>Run</item>
+    </string-array>
+
+</resources>
