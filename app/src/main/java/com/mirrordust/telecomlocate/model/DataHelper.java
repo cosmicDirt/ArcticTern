@@ -1,9 +1,11 @@
 package com.mirrordust.telecomlocate.model;
 
+import android.provider.Settings;
 import android.util.Log;
 
 import com.mirrordust.telecomlocate.entity.DataSet;
 import com.mirrordust.telecomlocate.entity.Sample;
+import com.mirrordust.telecomlocate.interf.OnAddOrUpdateSampleListener;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -17,7 +19,9 @@ public class DataHelper {
     public static final String TAG = "DataHelper";
 
     // create & update
-    public static void addOrUpdateSampleAsync(Realm realm, final Sample sample) {
+    public static void addOrUpdateSampleAsync(
+            Realm realm, final Sample sample,
+            final OnAddOrUpdateSampleListener onAddOrUpdateSampleListener) {
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -26,14 +30,35 @@ public class DataHelper {
         }, new Realm.Transaction.OnSuccess() {
             @Override
             public void onSuccess() {
-                // TODO: 2017/07/26/026 successfully save a new sample
-                Log.d(TAG, "addSampleAsync success");
+                onAddOrUpdateSampleListener.onAddOrUpdateSample();
+                Log.e(TAG, "addSampleAsync success");
             }
         }, new Realm.Transaction.OnError() {
             @Override
             public void onError(Throwable error) {
                 // TODO: 2017/07/26/026 failed to save a new sample
                 Log.e(TAG, "addSampleAsync error");
+            }
+        });
+    }
+
+    public static void updateDataSetExport(Realm realm, final long index, final boolean exported) {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                DataSet dataSet = getDataSet(realm, index);
+                dataSet.setExported(exported);
+            }
+        });
+
+    }
+
+    public static void updateDataSetUpload(Realm realm, final long index, final boolean uploaded) {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                DataSet dataSet = getDataSet(realm, index);
+                dataSet.setUploaded(uploaded);
             }
         });
     }
@@ -82,6 +107,41 @@ public class DataHelper {
         return realm.where(DataSet.class).findAll();
     }
 
+    public static long getMaxDataSetIndex(Realm realm) {
+        return realm.where(DataSet.class).max("index").longValue();
+    }
+
+    public static void saveNewSamples(Realm realm, final long newIndex, final String newName) {
+        final RealmResults<Sample> newSamples = getNewSamples(realm);
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                for (Sample sample : newSamples) {
+                    sample.setIndex(newIndex);
+                    realm.copyToRealmOrUpdate(sample);
+                }
+                DataSet dataSet = realm.createObject(DataSet.class);
+                dataSet.setIndex(newIndex);
+                dataSet.setName(newName);
+                dataSet.setExported(false);
+                dataSet.setUploaded(false);
+                dataSet.setExportedPath("");
+                dataSet.setDesc(
+                        newSamples.size() == 0
+                                ?
+                                String.format("%s,%s,%s",
+                                        newSamples.size(),
+                                        System.currentTimeMillis(),
+                                        System.currentTimeMillis())
+                                :
+                                String.format("%s,%s,%s",
+                                        newSamples.size(),
+                                        newSamples.first().getTime(),
+                                        newSamples.last().getTime()));
+            }
+        });
+    }
+
     // delete
     public static void deleteSample(Realm realm, String mid) {
         // delete a single sample
@@ -104,28 +164,38 @@ public class DataHelper {
         });
     }
 
-    public static void deleteSamples(Realm realm, long index) {
+    public static void deleteSamples(Realm realm, final long index) {
         // delete a dataset's samples
         // when delete a set of samples, delete corresponding dataset
         final RealmResults<Sample> samples = getSamplesByIndex(realm, index);
         final DataSet dataSet = getDataSet(realm, index);
-        realm.executeTransactionAsync(new Realm.Transaction() {
+        realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
                 samples.deleteAllFromRealm();
-                dataSet.deleteFromRealm();
-            }
-        }, new Realm.Transaction.OnSuccess() {
-            @Override
-            public void onSuccess() {
-                // TODO: 2017/07/26/026 delete a data set success
-            }
-        }, new Realm.Transaction.OnError() {
-            @Override
-            public void onError(Throwable error) {
-                // TODO: 2017/07/26/026 delete a data set error
+                if (index != 0) {
+                    dataSet.deleteFromRealm();
+                }
             }
         });
+//        realm.executeTransactionAsync(new Realm.Transaction() {
+//            @Override
+//            public void execute(Realm realm) {
+//                samples.deleteAllFromRealm();
+//                dataSet.deleteFromRealm();
+//            }
+//        }, new Realm.Transaction.OnSuccess() {
+//            @Override
+//            public void onSuccess() {
+//                Log.e(TAG, "删除成功");
+//                // TODO: 2017/07/26/026 delete a data set success
+//            }
+//        }, new Realm.Transaction.OnError() {
+//            @Override
+//            public void onError(Throwable error) {
+//                // TODO: 2017/07/26/026 delete a data set error
+//            }
+//        });
     }
 
     public static void deleteSamples(Realm realm, String name) {

@@ -3,7 +3,6 @@ package com.mirrordust.telecomlocate.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +16,14 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mirrordust.telecomlocate.R;
 import com.mirrordust.telecomlocate.activity.SampleDetailActivity;
+import com.mirrordust.telecomlocate.entity.Sample;
+import com.mirrordust.telecomlocate.model.DataHelper;
 
 public class MapFragment extends Fragment {
 
     private static final String TAG = "MapFragment";
-    private static final String ARG_SAMPLE_ID = "sample_id";
-    private double longitude = 121.2095634;
-    private double latitude = 31.28441738;
+    private double longitude;
+    private double latitude;
     private MapView mMapView;
 
     public MapFragment() {
@@ -37,13 +37,14 @@ public class MapFragment extends Fragment {
         mMapView = (MapView) frameLayout.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
         final SampleDetailActivity parentActivity = (SampleDetailActivity) getActivity();
-        mMapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(MapboxMap mapboxMap) {
-                Log.e("地图view","onMapReady");
-                showPoints(mapboxMap, parentActivity.getSampleId());
-            }
-        });
+        setPoint(parentActivity);
+//        mMapView.getMapAsync(new OnMapReadyCallback() {
+//            @Override
+//            public void onMapReady(MapboxMap mapboxMap) {
+//                Log.e("地图view","onMapReady");
+//                showPoints(mapboxMap, parentActivity.getSampleId());
+//            }
+//        });
         return frameLayout;
     }
 
@@ -52,7 +53,14 @@ public class MapFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
-    public void showPoints(MapboxMap mapboxMap, String id) {
+    private void setPoint(SampleDetailActivity parentActivity) {
+        String mID = parentActivity.getSampleId();
+        Sample sample = DataHelper.getSample(parentActivity.getRealm(), mID);
+        longitude = sample.getLatLng().getLongitude();
+        latitude = sample.getLatLng().getLatitude();
+    }
+
+    private void showPoints(MapboxMap mapboxMap) {
         LatLng latLng = new LatLng(latitude, longitude);
         CameraPosition position = new CameraPosition.Builder()
                 .target(latLng)
@@ -73,6 +81,12 @@ public class MapFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mMapView.onResume();
+        mMapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(MapboxMap mapboxMap) {
+                showPoints(mapboxMap);
+            }
+        });
     }
 
     @Override

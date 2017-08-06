@@ -22,9 +22,9 @@ public class BaseStation extends RealmObject {
                                    GSM has #getPsc() but always get Integer.MAX_VALUE,
                                    psc is undefined for GSM */
 
-    private double lat;         // Base station latitude
-
     private double lon;         // Base station longitude
+
+    private double lat;         // Base station latitude
 
     private int asuLevel;       /* Signal level as an asu value, asu is calculated based on 3GPP RSRP
                                    for GSM, between 0..31, 99 is unknown
@@ -87,20 +87,20 @@ public class BaseStation extends RealmObject {
         this.bsic_psc_pci = bsic_psc_pci;
     }
 
-    public double getLat() {
-        return lat;
-    }
-
-    public void setLat(double lat) {
-        this.lat = lat;
-    }
-
     public double getLon() {
         return lon;
     }
 
     public void setLon(double lon) {
         this.lon = lon;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
     }
 
     public int getAsuLevel() {
@@ -144,8 +144,8 @@ public class BaseStation extends RealmObject {
                 ", cid=" + cid +
                 ", arfcn=" + arfcn +
                 ", bsic_psc_pci=" + bsic_psc_pci +
-                ", lat=" + lat +
                 ", lon=" + lon +
+                ", lat=" + lat +
                 ", asuLevel=" + asuLevel +
                 ", signalLevel=" + signalLevel +
                 ", dbm=" + dbm +

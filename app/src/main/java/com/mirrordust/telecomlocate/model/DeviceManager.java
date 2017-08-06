@@ -10,13 +10,20 @@ import com.mirrordust.telecomlocate.entity.Device;
  */
 
 public class DeviceManager {
+
     private static final String TAG = "DeviceManager";
 
-    public static Device information(Context context) {
+    private Context mContext;
+
+    public DeviceManager(Context context) {
+        mContext = context;
+    }
+
+    public Device information() {
         Device device = new Device();
 
         String serviceName = Context.TELEPHONY_SERVICE;
-        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(serviceName);
+        TelephonyManager telephonyManager = (TelephonyManager) mContext.getSystemService(serviceName);
 
         device.setIMEI(telephonyManager.getDeviceId());
         device.setIMSI(telephonyManager.getSubscriberId());

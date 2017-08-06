@@ -10,18 +10,21 @@ import android.view.MenuItem;
 
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mirrordust.telecomlocate.R;
+import com.mirrordust.telecomlocate.adapter.SectionsPagerAdapter;
 import com.mirrordust.telecomlocate.fragment.DetailFragment;
 import com.mirrordust.telecomlocate.fragment.MapFragment;
-import com.mirrordust.telecomlocate.adapter.SectionsPagerAdapter;
+import com.mirrordust.telecomlocate.util.C;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
+
 public class SampleDetailActivity extends AppCompatActivity {
 
     private static final String TAG = "SampleDetailActivity";
-    private static final String ARG_SAMPLE_ID = "sample_id";
     private String sampleId;
+    private Realm realm;
     private SectionsPagerAdapter mSectionsPagerAdapter; // provide fragments for each of the sections
     private ViewPager mViewPager; // host the section contents
     private TabLayout mTabLayout;
@@ -37,7 +40,8 @@ public class SampleDetailActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        sampleId = getIntent().getStringExtra(ARG_SAMPLE_ID);
+        realm = Realm.getDefaultInstance();
+        setSampleId(getIntent().getStringExtra(C.ARG_SAMPLE_ID));
 
         // fragments
         List<Fragment> fragments = new ArrayList<>();
@@ -60,12 +64,26 @@ public class SampleDetailActivity extends AppCompatActivity {
 
     }
 
+    public Realm getRealm() {
+        return realm;
+    }
+
+    public void setRealm(Realm realm) {
+        this.realm = realm;
+    }
+
     public String getSampleId() {
         return sampleId;
     }
 
     public void setSampleId(String sampleId) {
         this.sampleId = sampleId;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        realm.close();
     }
 
     @Override

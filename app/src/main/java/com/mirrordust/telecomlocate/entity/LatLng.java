@@ -7,19 +7,11 @@ import io.realm.RealmObject;
  */
 
 public class LatLng extends RealmObject {
-    private double latitude;
     private double longitude;
+    private double latitude;
     private double altitude;
     private float accuracy;
     private float speed;
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
 
     public double getLongitude() {
         return longitude;
@@ -27,6 +19,14 @@ public class LatLng extends RealmObject {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 
     public double getAltitude() {
@@ -56,8 +56,8 @@ public class LatLng extends RealmObject {
     @Override
     public String toString() {
         return "LatLng{" +
-                "latitude=" + latitude +
-                ", longitude=" + longitude +
+                "longitude=" + longitude +
+                ", latitude=" + latitude +
                 ", altitude=" + altitude +
                 ", accuracy=" + accuracy +
                 ", speed=" + speed +

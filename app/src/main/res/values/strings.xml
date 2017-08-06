@@ -39,6 +39,16 @@
     <string name="detail_title">title</string>
     <string name="new_sample_bs_number">base station number</string>
 
+    <!--data activity-->
+    <string name="options_dots">⋮</string>
+    <string name="data_set_desc">[Size] Time period</string>
+    <string name="data_set_name">Data Set Name</string>
+    <string name="iv_uploaded_description">is data uploaded</string>
+    <string name="iv_exported_description">is data exported</string>
+    <string name="title_action_upload">Upload</string>
+    <string name="title_action_export">Export</string>
+    <string name="title_action_delete_data_set">Delete</string>
+
     <string-array name="travel_mode">
         <item>Walk</item>
         <item>Bicycle</item>

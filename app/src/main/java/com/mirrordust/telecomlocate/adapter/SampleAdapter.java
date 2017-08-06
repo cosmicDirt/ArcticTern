@@ -1,6 +1,6 @@
 package com.mirrordust.telecomlocate.adapter;
 
-import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,8 +8,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mirrordust.telecomlocate.R;
+import com.mirrordust.telecomlocate.activity.SampleDetailActivity;
 import com.mirrordust.telecomlocate.entity.Sample;
-import com.mirrordust.telecomlocate.util.Converter;
+import com.mirrordust.telecomlocate.util.C;
+import com.mirrordust.telecomlocate.util.Utils;
 
 import io.realm.RealmResults;
 
@@ -19,24 +21,15 @@ import io.realm.RealmResults;
 
 public class SampleAdapter extends RecyclerView.Adapter<SampleAdapter.SampleViewHolder> {
 
-    private static final String ARG_SAMPLE_ID = "sample_id";
-    private Context mContext;
     private RealmResults<Sample> mSampleList;
 
-    public SampleAdapter(Context context, RealmResults<Sample> samples) {
-        mContext = context;
+    public SampleAdapter(RealmResults<Sample> samples) {
         mSampleList = samples;
     }
 
-    public void addSample(Sample sample) {
-        //add new sample to the beginning
-        mSampleList.add(0, sample);
-        notifyItemInserted(0);
-    }
-
     public void addSample() {
+//        notifyDataSetChanged();
         notifyItemInserted(0);
-
     }
 
     @Override
@@ -47,24 +40,24 @@ public class SampleAdapter extends RecyclerView.Adapter<SampleAdapter.SampleView
     }
 
     @Override
-    public void onBindViewHolder(SampleViewHolder holder, int position) {
+    public void onBindViewHolder(final SampleViewHolder holder, int position) {
         int size = mSampleList.size();
         int sampleIdx = size - position - 1;
         int showIdx = sampleIdx + 1;
-        Sample s = mSampleList.get(sampleIdx);
-        holder.No.setText(Converter.index2String(showIdx));
-        holder.BSNum.setText(Converter.baseStationNum2String(s.getBSList().size()));
-        holder.sampleTime.setText(Converter.timestamp2LocalTime(s.getTime()));
-        holder.sampleLocation.setText(Converter.Latlng2String(s.getLatLng()));
-        /*holder.itemView.setOnClickListener(new View.OnClickListener() {
+        final Sample s = mSampleList.get(sampleIdx);
+        holder.No.setText(Utils.index2String(showIdx));
+        holder.BSNum.setText(Utils.baseStationNum2String(s.getBSList().size()));
+        holder.sampleTime.setText(Utils.timestamp2LocalTime(s.getTime()));
+        holder.sampleLocation.setText(Utils.latlng2String(s.getLatLng()));
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mContext, SampleDetailActivity.class);
-                intent.putExtra(ARG_SAMPLE_ID, "测试id_123456789");
-                mContext.startActivity(intent);
+            public void onClick(View v) {
+                Intent intent =
+                        new Intent(holder.itemView.getContext(), SampleDetailActivity.class);
+                intent.putExtra(C.ARG_SAMPLE_ID, s.getmID());
+                holder.itemView.getContext().startActivity(intent);
             }
-        });*/
-
+        });
     }
 
     @Override

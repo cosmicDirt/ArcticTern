@@ -1,6 +1,5 @@
 package com.mirrordust.telecomlocate.adapter;
 
-import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,25 +16,23 @@ import java.util.List;
  * Created by LiaoShanhe on 2017/07/12/012.
  */
 
-public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailViewHolder> {
+public class SampleDetailAdapter extends RecyclerView.Adapter<SampleDetailAdapter.DetailViewHolder> {
 
-    private Context mContext;
     private List<DetailItem> mDetailItemList;
 
-    public DetailAdapter(Context context, List<DetailItem> detailItemList) {
-        this.mContext = context;
-        this.mDetailItemList = detailItemList;
+    public SampleDetailAdapter(List<DetailItem> detailItemList) {
+        mDetailItemList = detailItemList;
     }
 
     @Override
-    public DetailAdapter.DetailViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SampleDetailAdapter.DetailViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.detail_recycler_view, parent, false);
         return new DetailViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(DetailAdapter.DetailViewHolder holder, int position) {
+    public void onBindViewHolder(SampleDetailAdapter.DetailViewHolder holder, int position) {
         DetailItem detailItem = mDetailItemList.get(position);
         holder.detailItemTitle.setText(detailItem.getTitle());
         holder.detailItemValue.setText(detailItem.getValue());
@@ -43,15 +40,18 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailView
         if (detailItem.getValue().equals("")) {
             // a new section of details
             holder.itemView.setBackgroundColor(
-                    ContextCompat.getColor(mContext, R.color.detailListDivideColor));
+                    ContextCompat.getColor(
+                            holder.itemView.getContext(), R.color.detailListDivideColor));
         } else if (position % 2 == 0) {
             // even view
             holder.itemView.setBackgroundColor(
-                    ContextCompat.getColor(mContext, R.color.detailListEvenColor));
+                    ContextCompat.getColor(
+                            holder.itemView.getContext(), R.color.detailListEvenColor));
         } else {
             //odd view
             holder.itemView.setBackgroundColor(
-                    ContextCompat.getColor(mContext, R.color.detailListOddColor));
+                    ContextCompat.getColor(
+                            holder.itemView.getContext(), R.color.detailListOddColor));
         }
     }
 

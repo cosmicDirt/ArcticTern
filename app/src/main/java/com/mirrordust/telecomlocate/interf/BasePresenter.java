@@ -6,6 +6,8 @@ package com.mirrordust.telecomlocate.interf;
 
 public interface BasePresenter {
 
-    void start();
+    void subscribe();
+
+    void unsubscribe();
 
 }

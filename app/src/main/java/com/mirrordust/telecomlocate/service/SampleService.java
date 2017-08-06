@@ -7,21 +7,19 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
-import com.mirrordust.telecomlocate.interf.OnSamplesUpdateListener;
-import com.mirrordust.telecomlocate.model.SampleManager;
 import com.mirrordust.telecomlocate.entity.Sample;
+import com.mirrordust.telecomlocate.model.SampleManager;
+import com.mirrordust.telecomlocate.presenter.SamplePresenter;
 
-import io.realm.Realm;
 import rx.functions.Action1;
 
 public class SampleService extends Service {
     public static final String TAG = "SampleService";
     private final IBinder mBinder = new LocalBinder();
-    private OnSamplesUpdateListener mOnSamplesUpdateListener;
     private String mode;
     private SampleManager mSampleManager;
+    private SamplePresenter mPresenter;
     private Handler mHandler = new Handler();
     private Runnable mDataCollection = new Runnable() {
         @Override
@@ -42,15 +40,10 @@ public class SampleService extends Service {
     private void requestRecord() {
         mSampleManager.fetchRecord().subscribe(new Action1<Sample>() {
             @Override
-            public void call(Sample record) {
-                record.setMode(mode);
-                Log.e(TAG, record.getLatLng().toString());
-                Realm realm = Realm.getDefaultInstance();
-                realm.beginTransaction();
-                realm.copyToRealmOrUpdate(record);
-                realm.commitTransaction();
-
-                mOnSamplesUpdateListener.onSamplesUpdate();
+            public void call(Sample sample) {
+                sample.setIndex(0);
+                sample.setMode(mode);
+                mPresenter.addOrUpdateSample(sample);
             }
         });
     }
@@ -71,12 +64,12 @@ public class SampleService extends Service {
         return mSampleManager != null;
     }
 
-    public OnSamplesUpdateListener getOnSamplesUpdateListener() {
-        return mOnSamplesUpdateListener;
+    public void setSamplePresenter(SamplePresenter presenter) {
+        mPresenter = presenter;
     }
 
-    public void setOnSamplesUpdateListener(OnSamplesUpdateListener onSamplesUpdateListener) {
-        mOnSamplesUpdateListener = onSamplesUpdateListener;
+    public boolean isSamplePresenterInitialized() {
+        return mPresenter != null;
     }
 
     public String getMode() {

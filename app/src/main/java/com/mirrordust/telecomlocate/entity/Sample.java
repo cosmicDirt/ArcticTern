@@ -1,6 +1,5 @@
 package com.mirrordust.telecomlocate.entity;
 
-import java.util.Date;
 import java.util.UUID;
 
 import io.realm.RealmList;
@@ -35,7 +34,7 @@ public class Sample extends RealmObject {
     private BaseStation MBS;                // connected base station
 
     private Signal signal;                  // mobile signal strength,
-    // get from #PhoneStateListener.LISTEN_SIGNAL_STRENGTHS
+                                            // get from #PhoneStateListener.LISTEN_SIGNAL_STRENGTHS
 
     private Battery btry;                   // battery
 
@@ -43,7 +42,7 @@ public class Sample extends RealmObject {
 
     public Sample() {
         mID = UUID.randomUUID().toString();
-        time = new Date().getTime();
+        time = System.currentTimeMillis();
     }
 
     // Getter and Setter for all fields
