@@ -3,11 +3,14 @@ package com.mirrordust.telecomlocate.service;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
+import com.mirrordust.telecomlocate.R;
 import com.mirrordust.telecomlocate.entity.Sample;
 import com.mirrordust.telecomlocate.model.SampleManager;
 import com.mirrordust.telecomlocate.presenter.SamplePresenter;
@@ -27,9 +30,12 @@ public class SampleService extends Service {
             try {
                 requestRecord();
             } finally {
-                mHandler.postDelayed(mDataCollection, 5000);
-/*                SignalStrength signalStrength = (SignalStrength) getApplication();
-                mHandler.postDelayed(mDataCollection, signalStrength.getmTimeInterval());*/
+                SharedPreferences sharedPref =
+                        PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                String stringValue = sharedPref.getString("sampling_interval",
+                        getString(R.string.pref_default_sampling_interval));
+                long samplingInterval = Long.parseLong(stringValue); // in seconds
+                mHandler.postDelayed(mDataCollection, samplingInterval * 1000);
             }
         }
     };

@@ -186,7 +186,7 @@ public class DataPresenter implements DataContract.Presenter {
 
     @Override
     public void uploadDataSet(long index, String name, String desc) {
-        String url = "http://10.60.43.109:5000/uploads";
+        String url = mDataView.uploadUrl();
         String fileName = exportName(name, desc);
         File dir1 = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_DOCUMENTS), "TelecomLocate");

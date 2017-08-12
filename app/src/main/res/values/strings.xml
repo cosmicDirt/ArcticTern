@@ -4,6 +4,7 @@
     <!--mapbox-->
     <string name="mapbox_public_access_token">pk.eyJ1IjoibWlycm9yZHVzdCIsImEiOiJjaXNjeXc2Y3owMDBmMnpwZjd2YnZvaWZhIn0.luGgUhgNCUpyNL4cACktHA</string>
 
+
     <!--main activity drawer strings-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -13,16 +14,19 @@
     <string name="nav_test">Test availability</string>
     <string name="nav_data">Data Management</string>
     <string name="nav_prediction">Prediction</string>
+    <string name="nav_settings">Settings</string>
     <string name="nav_setting">Setting</string>
-    <string name="nav_collection_setting">Collection Setting</string>
-    <string name="nav_prediction_setting">Prediction Setting</string>
     <string name="nav_about">About</string>
+
 
     <!--activity label-->
     <string name="activity_label_collection">Collect Data</string>
     <string name="activity_label_detail">Detail</string>
     <string name="activity_label_data">Manage Data</string>
     <string name="activity_label_prediction">Prediction</string>
+    <string name="activity_label_settings">Settings</string>
+    <string name="activity_label_about">About</string>
+
 
     <!--collection activity-->
     <string name="new_sample_placeholder">Start A New Sampling</string>
@@ -32,12 +36,14 @@
     <string name="title_action_save">Save Data</string>
     <string name="title_action_discard">Discard Data</string>
 
+
     <!--detail activity-->
     <string name="detail_tab_title_1">Value</string>
     <string name="detail_tab_title_2">Map</string>
     <string name="detail_value">value</string>
     <string name="detail_title">title</string>
     <string name="new_sample_bs_number">base station number</string>
+
 
     <!--data activity-->
     <string name="options_dots">⋮</string>
@@ -49,6 +55,26 @@
     <string name="title_action_export">Export</string>
     <string name="title_action_delete_data_set">Delete</string>
 
+
+    <!--setting activity-->
+    <string name="pref_header_sample">Sample setting</string>
+    <string name="pref_header_data">Data setting</string>
+    <string name="pref_header_prediction">Prediction setting</string>
+    <!--sample setting-->
+    <string name="pref_default_sampling_interval">30</string>
+    <string name="pref_title_sampling_interval">Sampling interval (in seconds)</string>
+    <!--data setting-->
+    <string name="pref_default_upload_url">http://10.60.43.109:5000/uploads</string>
+    <string name="pref_title_upload_url">Upload url</string>
+
+
+    <!--about activity-->
+    <string name="about_github">Source code on GitHub</string>
+    <string name="about_version">Version x.x</string>
+    <string name="about_version_prefix">Version: </string>
+    <string name="about_check_new_version">Check new version</string>
+    <string name="about_description">这段是导出文件格式说明即字段描述</string>
+
     <string-array name="travel_mode">
         <item>Walk</item>
         <item>Bicycle</item>
@@ -57,5 +83,6 @@
         <item>Car</item>
         <item>Run</item>
     </string-array>
+
 
 </resources>

@@ -188,23 +188,20 @@ public class SampleActivity extends AppCompatActivity
                 Toast.makeText(this, "Not available now", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_data:
-                Intent intent = new Intent(this, DataActivity.class);
-                startActivity(intent);
+                Intent data_intent = new Intent(this, DataActivity.class);
+                startActivity(data_intent);
                 break;
             case R.id.nav_prediction:
                 // TODO: 2017/07/30/030 prediction
                 Toast.makeText(this, "Not available now", Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.nav_collection_setting:
-                // TODO: 2017/07/30/030 collection setting
-                break;
-            case R.id.nav_prediction_setting:
-                // TODO: 2017/07/30/030 prediction setting
-                Toast.makeText(this, "Not available now", Toast.LENGTH_SHORT).show();
+            case R.id.nav_setting:
+                Intent setting_intent = new Intent(this, SettingsActivity.class);
+                startActivity(setting_intent);
                 break;
             case R.id.nav_about:
-                // TODO: 2017/07/30/030 about page
-                Toast.makeText(this, "Not available now", Toast.LENGTH_SHORT).show();
+                Intent about_intent = new Intent(this, AboutActivity.class);
+                startActivity(about_intent);
                 break;
             default:
                 break;

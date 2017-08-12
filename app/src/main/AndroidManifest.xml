@@ -32,23 +32,36 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activity.SampleDetailActivity"
             android:label="@string/activity_label_detail"
             android:theme="@style/AppTheme.NoActionBar.DarkStatusBar" />
+
         <activity
             android:name=".activity.DataActivity"
             android:label="@string/activity_label_data"
             android:theme="@style/AppTheme.NoActionBar.DarkStatusBar" />
+
         <activity
             android:name=".activity.PredictionActivity"
             android:label="@string/activity_label_prediction"
+            android:theme="@style/AppTheme.NoActionBar.DarkStatusBar" />
+
+        <activity
+            android:name=".activity.SettingsActivity"
+            android:label="@string/activity_label_settings" />
+
+        <activity
+            android:name=".activity.AboutActivity"
+            android:label="@string/activity_label_about"
             android:theme="@style/AppTheme.NoActionBar.DarkStatusBar" />
 
         <service
             android:name=".service.SampleService"
             android:enabled="true"
             android:exported="true" />
+
 
     </application>
 

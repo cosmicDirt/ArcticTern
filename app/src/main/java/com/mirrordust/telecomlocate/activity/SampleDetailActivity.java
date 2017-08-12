@@ -53,7 +53,8 @@ public class SampleDetailActivity extends AppCompatActivity {
         titles.add(getString(R.string.detail_tab_title_1));
         titles.add(getString(R.string.detail_tab_title_2));
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), fragments, titles);
+        mSectionsPagerAdapter = new
+                SectionsPagerAdapter(getSupportFragmentManager(), fragments, titles);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);

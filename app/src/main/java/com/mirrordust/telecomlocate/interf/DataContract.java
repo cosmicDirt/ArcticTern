@@ -30,6 +30,8 @@ public interface DataContract {
         void deleteDataSet();
 
         void updateDataSetStatus();
+
+        String uploadUrl();
     }
 
     interface Presenter extends BasePresenter {

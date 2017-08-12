@@ -116,10 +116,7 @@ public class DataHelper {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                for (Sample sample : newSamples) {
-                    sample.setIndex(newIndex);
-                    realm.copyToRealmOrUpdate(sample);
-                }
+                // first create a new data set
                 DataSet dataSet = realm.createObject(DataSet.class);
                 dataSet.setIndex(newIndex);
                 dataSet.setName(newName);
@@ -138,6 +135,11 @@ public class DataHelper {
                                         newSamples.size(),
                                         newSamples.first().getTime(),
                                         newSamples.last().getTime()));
+                // then update new samples' index from 0 to a new value
+                for (Sample sample : newSamples) {
+                    sample.setIndex(newIndex);
+                    realm.copyToRealmOrUpdate(sample);
+                }
             }
         });
     }

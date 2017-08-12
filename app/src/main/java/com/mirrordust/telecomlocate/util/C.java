@@ -8,4 +8,12 @@ public final class C {
 
     public static final String ARG_SAMPLE_ID = "sample_id";
 
+    public static String GITHUB = "https://github.com/mirrordust";
+
+    public static String APP_URL = "no";
+
+    public static String SHARE_CONTENT = "Application for sampling base station signal information:\n" + APP_URL;
+
+
+
 }

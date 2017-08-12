@@ -53,11 +53,5 @@ public class TelecomLocate extends Application {
         // Gradle automatically generates proper variable as below.
         UploadService.NAMESPACE = BuildConfig.APPLICATION_ID;
 
-        // TODO: 2017/07/31/031 delete this
-        RealmResults<DataSet> dataSets = DataHelper.getAllDataSet(Realm.getDefaultInstance());
-        for (DataSet ds : dataSets) {
-            Log.e(TAG, ds.getName() + ", " + ds.getIndex());
-        }
-
     }
 }

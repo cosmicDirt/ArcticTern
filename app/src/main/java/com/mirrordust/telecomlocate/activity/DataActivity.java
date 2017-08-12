@@ -2,7 +2,9 @@ package com.mirrordust.telecomlocate.activity;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -46,13 +48,6 @@ public class DataActivity extends AppCompatActivity implements DataContract.View
         mPresenter.subscribe();
 
         initMainView();
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            }
-        });
     }
 
     private void initMainView() {
@@ -148,7 +143,8 @@ public class DataActivity extends AppCompatActivity implements DataContract.View
 
     @Override
     public void showExternalStorageNotWritable() {
-        Toast.makeText(this, "export data failed, external storage not writable", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "export data failed, external storage not writable", Toast.LENGTH_LONG)
+                .show();
     }
 
     @Override
@@ -172,5 +168,11 @@ public class DataActivity extends AppCompatActivity implements DataContract.View
     @Override
     public void updateDataSetStatus() {
         mAdapter.onDataSetUpdate();
+    }
+
+    @Override
+    public String uploadUrl() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        return sharedPref.getString("upload_url", getString(R.string.pref_default_upload_url));
     }
 }
