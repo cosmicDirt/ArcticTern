@@ -64,7 +64,7 @@
     <string name="pref_default_sampling_interval">30</string>
     <string name="pref_title_sampling_interval">Sampling interval (in seconds)</string>
     <!--data setting-->
-    <string name="pref_default_upload_url">http://10.60.43.109:5000/uploads</string>
+    <string name="pref_default_upload_url">http://116.62.124.55:8080/uploads</string>
     <string name="pref_title_upload_url">Upload url</string>
 
 
@@ -82,6 +82,8 @@
         <item>Taxi</item>
         <item>Car</item>
         <item>Run</item>
+        <item>Bus</item>
+        <item>train</item>
     </string-array>
 
 

@@ -72,6 +72,13 @@ public class DataActivity extends AppCompatActivity implements DataContract.View
     protected void onResume() {
         super.onResume();
         mPresenter.checkDataSetStatus();
+        mPresenter.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mPresenter.onPause(this);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.mirrordust.telecomlocate.service;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
 import com.mirrordust.telecomlocate.R;
+import com.mirrordust.telecomlocate.activity.SampleActivity;
 import com.mirrordust.telecomlocate.entity.Sample;
 import com.mirrordust.telecomlocate.model.SampleManager;
 import com.mirrordust.telecomlocate.presenter.SamplePresenter;
@@ -19,6 +22,7 @@ import rx.functions.Action1;
 
 public class SampleService extends Service {
     public static final String TAG = "SampleService";
+    public static final int NOTIFICATION_ID = 9981;
     private final IBinder mBinder = new LocalBinder();
     private String mode;
     private SampleManager mSampleManager;
@@ -89,6 +93,20 @@ public class SampleService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
+        Intent nfIntent = new Intent(this, SampleActivity.class);
+        nfIntent.setAction(Intent.ACTION_MAIN);
+        nfIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        nfIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent contentIntent = PendingIntent.getActivity(
+                getApplicationContext(), 0, nfIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Notification notification = new Notification.Builder(this)
+                .setContentTitle(getString(R.string.app_name))
+                .setContentText("Sample telco-data")
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentIntent(contentIntent)
+                .build();
+        startForeground(NOTIFICATION_ID, notification);
         return mBinder;
     }
 
@@ -96,5 +114,11 @@ public class SampleService extends Service {
         public SampleService getService() {
             return SampleService.this;
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        stopForeground(true);
+        super.onDestroy();
     }
 }

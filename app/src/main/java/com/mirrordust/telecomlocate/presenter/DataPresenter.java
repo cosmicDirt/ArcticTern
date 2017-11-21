@@ -4,7 +4,9 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 import android.util.LongSparseArray;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.mirrordust.telecomlocate.entity.BaseStation;
 import com.mirrordust.telecomlocate.entity.Battery;
 import com.mirrordust.telecomlocate.entity.DataSet;
@@ -16,10 +18,14 @@ import com.mirrordust.telecomlocate.entity.Signal;
 import com.mirrordust.telecomlocate.interf.DataContract;
 import com.mirrordust.telecomlocate.model.DataHelper;
 import com.mirrordust.telecomlocate.model.DeviceManager;
+import com.mirrordust.telecomlocate.pojo.UploadResponse;
 import com.mirrordust.telecomlocate.util.Utils;
 
 import net.gotev.uploadservice.MultipartUploadRequest;
+import net.gotev.uploadservice.ServerResponse;
+import net.gotev.uploadservice.UploadInfo;
 import net.gotev.uploadservice.UploadNotificationConfig;
+import net.gotev.uploadservice.UploadServiceBroadcastReceiver;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -48,6 +54,37 @@ public class DataPresenter implements DataContract.Presenter {
     private DeviceManager mDeviceManager;
 
     private Realm mRealm;
+
+    private long currentUploadedIndex;
+
+    private UploadServiceBroadcastReceiver uploadServiceBroadcastReceiver =
+            new UploadServiceBroadcastReceiver() {
+
+                @Override
+                public void onProgress(Context context, UploadInfo uploadInfo) {
+                }
+
+                @Override
+                public void onError(Context context, UploadInfo uploadInfo,
+                                    ServerResponse serverResponse, Exception exception) {
+                    Toast.makeText(context, "upload failed!", Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onCompleted(Context context, UploadInfo uploadInfo, ServerResponse serverResponse) {
+                    if (serverResponse != null) {
+                        UploadResponse response = new Gson()
+                                .fromJson(serverResponse.getBodyAsString(), UploadResponse.class);
+                        if (response.isSuccess()){
+                            changeDataSetUploadStatus(currentUploadedIndex, true);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(Context context, UploadInfo uploadInfo) {
+                }
+            };
 
     public DataPresenter(DataContract.View dataView, DeviceManager deviceManager) {
         mDataView = dataView;
@@ -133,6 +170,7 @@ public class DataPresenter implements DataContract.Presenter {
         return sb.toString();
     }
 
+    // TODO: 2017/10/20 将 ！！！运动模式！！！ 导出 // FIXME: 2017/10/20
     private String MRHeader(int size) {
         return String.format("%s\n", size);
     }
@@ -193,10 +231,9 @@ public class DataPresenter implements DataContract.Presenter {
         File dir = new File(dir1, "ExportedData");
         File file = new File(dir, fileName);
         String filePath = file.getAbsolutePath();
+        currentUploadedIndex = index;
         String uploadID = uploadMultipart(mDataView.getContext(), url, filePath);
         mUploadIDs.put(index, uploadID);
-        // TODO: 2017/08/06/006 change status after upload complete
-        changeDataSetUploadStatus(index, true);
     }
 
     private String uploadMultipart(Context context, String url, String filePath) {
@@ -240,6 +277,16 @@ public class DataPresenter implements DataContract.Presenter {
                 checkDataSetStatus(ds);
             }
         }
+    }
+
+    @Override
+    public void onResume(Context context) {
+        uploadServiceBroadcastReceiver.register(context);
+    }
+
+    @Override
+    public void onPause(Context context) {
+        uploadServiceBroadcastReceiver.unregister(context);
     }
 
     private void checkDataSetStatus(DataSet dataSet) {

@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Environment;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -52,6 +52,8 @@ public class SampleActivity extends AppCompatActivity
 
     private FloatingActionButton mFab;
 
+    private PowerManager.WakeLock wakeLock;
+
     // presenter
     private SampleContract.Presenter mPresenter;
 
@@ -85,6 +87,10 @@ public class SampleActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "telco-data-sampling");
+        wakeLock.acquire();
     }
 
     @Override
@@ -147,6 +153,10 @@ public class SampleActivity extends AppCompatActivity
         mRecyclerView.setAdapter(null);
         mPresenter.unBindService(this);
         mPresenter.unsubscribe();
+        if (wakeLock!=null&&wakeLock.isHeld()){
+            wakeLock.release();
+            wakeLock=null;
+        }
     }
 
     @Override

@@ -72,8 +72,6 @@ public class SignalManager extends PhoneStateListener {
     public void onSignalStrengthsChanged(SignalStrength signalStrength) {
         super.onSignalStrengthsChanged(signalStrength);
         Log.e(TAG, "信号强度变化");
-        Toast toast = Toast.makeText(mContext, "信号强度变化", Toast.LENGTH_SHORT);
-        toast.show();
         signalMeasuring(signalStrength);
     }
 

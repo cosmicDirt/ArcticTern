@@ -53,59 +53,59 @@ public class BaseStationManager {
     }
 
     private BaseStation bindData(CellInfo cellInfo) {
-        BaseStation cellularTower = null;
+        BaseStation baseStation = null;
         Log.v(TAG, cellInfo.toString());
         Log.v(TAG, "" + Integer.MAX_VALUE);
 
         if (cellInfo instanceof CellInfoWcdma) {
             CellInfoWcdma cellInfoWcdma = (CellInfoWcdma) cellInfo;
             CellIdentityWcdma cellIdentityWcdma = cellInfoWcdma.getCellIdentity();
-            cellularTower = new BaseStation();
-            cellularTower.setType("WCDMA");
-            cellularTower.setCid(cellIdentityWcdma.getCid());
-            cellularTower.setLac(cellIdentityWcdma.getLac());
-            cellularTower.setMcc(cellIdentityWcdma.getMcc());
-            cellularTower.setMnc(cellIdentityWcdma.getMnc());
-            cellularTower.setBsic_psc_pci(cellIdentityWcdma.getPsc());
+            baseStation = new BaseStation();
+            baseStation.setType("WCDMA");
+            baseStation.setCid(cellIdentityWcdma.getCid());
+            baseStation.setLac(cellIdentityWcdma.getLac());
+            baseStation.setMcc(cellIdentityWcdma.getMcc());
+            baseStation.setMnc(cellIdentityWcdma.getMnc());
+            baseStation.setBsic_psc_pci(cellIdentityWcdma.getPsc());
             if (cellInfoWcdma.getCellSignalStrength() != null) {
-                cellularTower.setAsuLevel(cellInfoWcdma.getCellSignalStrength().getAsuLevel()); //Get the signal level as an asu value between 0..31, 99 is unknown Asu is calculated based on 3GPP RSRP.
-                cellularTower.setSignalLevel(cellInfoWcdma.getCellSignalStrength().getLevel()); //Get signal level as an int from 0..4
-                cellularTower.setDbm(cellInfoWcdma.getCellSignalStrength().getDbm()); //Get the signal strength as dBm
+                baseStation.setAsuLevel(cellInfoWcdma.getCellSignalStrength().getAsuLevel()); //Get the signal level as an asu value between 0..31, 99 is unknown Asu is calculated based on 3GPP RSRP.
+                baseStation.setSignalLevel(cellInfoWcdma.getCellSignalStrength().getLevel()); //Get signal level as an int from 0..4
+                baseStation.setDbm(cellInfoWcdma.getCellSignalStrength().getDbm()); //Get the signal strength as dBm
             }
         } else if (cellInfo instanceof CellInfoLte) {
             CellInfoLte cellInfoLte = (CellInfoLte) cellInfo;
             CellIdentityLte cellIdentityLte = cellInfoLte.getCellIdentity();
-            cellularTower = new BaseStation();
-            cellularTower.setType("LTE");
-            cellularTower.setCid(cellIdentityLte.getCi());
-            cellularTower.setMnc(cellIdentityLte.getMnc());
-            cellularTower.setMcc(cellIdentityLte.getMcc());
-            cellularTower.setLac(cellIdentityLte.getTac());
-            cellularTower.setBsic_psc_pci(cellIdentityLte.getPci());
+            baseStation = new BaseStation();
+            baseStation.setType("LTE");
+            baseStation.setCid(cellIdentityLte.getCi());
+            baseStation.setMnc(cellIdentityLte.getMnc());
+            baseStation.setMcc(cellIdentityLte.getMcc());
+            baseStation.setLac(cellIdentityLte.getTac());
+            baseStation.setBsic_psc_pci(cellIdentityLte.getPci());
             if (cellInfoLte.getCellSignalStrength() != null) {
-                cellularTower.setAsuLevel(cellInfoLte.getCellSignalStrength().getAsuLevel());
-                cellularTower.setSignalLevel(cellInfoLte.getCellSignalStrength().getLevel());
-                cellularTower.setDbm(cellInfoLte.getCellSignalStrength().getDbm());
+                baseStation.setAsuLevel(cellInfoLte.getCellSignalStrength().getAsuLevel());
+                baseStation.setSignalLevel(cellInfoLte.getCellSignalStrength().getLevel());
+                baseStation.setDbm(cellInfoLte.getCellSignalStrength().getDbm());
             }
         } else if (cellInfo instanceof CellInfoGsm) {
             CellInfoGsm cellInfoGsm = (CellInfoGsm) cellInfo;
             CellIdentityGsm cellIdentityGsm = cellInfoGsm.getCellIdentity();
-            cellularTower = new BaseStation();
-            cellularTower.setType("GSM");
-            cellularTower.setCid(cellIdentityGsm.getCid());
-            cellularTower.setLac(cellIdentityGsm.getLac());
-            cellularTower.setMcc(cellIdentityGsm.getMcc());
-            cellularTower.setMnc(cellIdentityGsm.getMnc());
-            cellularTower.setBsic_psc_pci(cellIdentityGsm.getPsc());
+            baseStation = new BaseStation();
+            baseStation.setType("GSM");
+            baseStation.setCid(cellIdentityGsm.getCid());
+            baseStation.setLac(cellIdentityGsm.getLac());
+            baseStation.setMcc(cellIdentityGsm.getMcc());
+            baseStation.setMnc(cellIdentityGsm.getMnc());
+            baseStation.setBsic_psc_pci(cellIdentityGsm.getPsc());
             if (cellInfoGsm.getCellSignalStrength() != null) {
-                cellularTower.setAsuLevel(cellInfoGsm.getCellSignalStrength().getAsuLevel());
-                cellularTower.setSignalLevel(cellInfoGsm.getCellSignalStrength().getLevel());
-                cellularTower.setDbm(cellInfoGsm.getCellSignalStrength().getDbm());
+                baseStation.setAsuLevel(cellInfoGsm.getCellSignalStrength().getAsuLevel());
+                baseStation.setSignalLevel(cellInfoGsm.getCellSignalStrength().getLevel());
+                baseStation.setDbm(cellInfoGsm.getCellSignalStrength().getDbm());
             }
         } else {
             Log.e(TAG, "CDMA CellInfo................................................");
         }
-        return cellularTower;
+        return baseStation;
     }
 
     public BaseStation getConnectedTower() {

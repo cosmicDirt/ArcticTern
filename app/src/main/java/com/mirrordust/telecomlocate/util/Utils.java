@@ -1,9 +1,15 @@
 package com.mirrordust.telecomlocate.util;
 
+import android.util.Log;
+
+import com.mirrordust.telecomlocate.entity.BaseStation;
 import com.mirrordust.telecomlocate.entity.LatLng;
 
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -51,10 +57,44 @@ public class Utils {
     }
 
     public static <T> T checkNotNull(T reference) {
-        if(reference == null) {
+        if (reference == null) {
             throw new NullPointerException();
         } else {
             return reference;
         }
+    }
+
+    public static String[] getFieldsValues(Object obj) {
+        String sep = ",";
+
+        if (obj == null)
+            return null;
+
+        Field[] fields = obj.getClass().getDeclaredFields();
+        List<String> fieldNames = new ArrayList<>();
+        List<Object> fieldValues = new ArrayList<>();
+        for (Field field : fields) {
+            if (!field.isAccessible()) {
+                field.setAccessible(true);
+            }
+            fieldNames.add(field.getName());
+            try {
+                fieldValues.add(field.get(obj));
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+
+        StringBuilder name = new StringBuilder();
+        StringBuilder value = new StringBuilder();
+        for (int i = 0; i < fields.length; i++) {
+            if (i != 0) {
+                name.append(sep);
+                value.append(sep);
+            }
+            name.append(fieldNames.get(i));
+            value.append(fieldValues.get(i).toString());
+        }
+        return new String[]{name.toString(), value.toString()};
     }
 }

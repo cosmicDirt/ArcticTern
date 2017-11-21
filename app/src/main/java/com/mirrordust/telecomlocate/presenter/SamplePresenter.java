@@ -63,6 +63,7 @@ public class SamplePresenter implements SampleContract.Presenter, OnAddOrUpdateS
     @Override
     public void unBindService(Context context) {
         if (mBound) {
+            mSampleService.stopForeground(true);
             context.unbindService(mConnection);
             mBound = false;
         }

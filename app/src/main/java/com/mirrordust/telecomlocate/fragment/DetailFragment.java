@@ -76,9 +76,6 @@ public class DetailFragment extends Fragment {
         //ID
         detailItems.add(new DetailItem("ID:", mID));
 
-        // FIXME: 2017/07/30/030 delete this
-        detailItems.add(new DetailItem("index", sample.getIndex()+""));
-
         //time location mode
         detailItems.add(new DetailItem("", ""));
         detailItems.add(new DetailItem("Basis:", ""));

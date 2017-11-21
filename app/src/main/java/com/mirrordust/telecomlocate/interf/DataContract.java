@@ -1,5 +1,7 @@
 package com.mirrordust.telecomlocate.interf;
 
+import android.content.Context;
+
 import com.mirrordust.telecomlocate.entity.DataSet;
 
 import io.realm.RealmResults;
@@ -49,6 +51,10 @@ public interface DataContract {
         void deleteDataSet(long index);
 
         void checkDataSetStatus();
+
+        void onResume(Context context);
+
+        void onPause(Context context);
     }
 
 }
