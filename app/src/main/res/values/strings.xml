@@ -61,7 +61,7 @@
     <string name="pref_header_data">Data setting</string>
     <string name="pref_header_prediction">Prediction setting</string>
     <!--sample setting-->
-    <string name="pref_default_sampling_interval">30</string>
+    <string name="pref_default_sampling_interval">10</string>
     <string name="pref_title_sampling_interval">Sampling interval (in seconds)</string>
     <!--data setting-->
     <string name="pref_default_upload_url">http://116.62.124.55:8080/uploads</string>
@@ -70,20 +70,20 @@
 
     <!--about activity-->
     <string name="about_github">Source code on GitHub</string>
-    <string name="about_version">Version x.x</string>
+    <string name="about_version">Version 1.1</string>
     <string name="about_version_prefix">Version: </string>
     <string name="about_check_new_version">Check new version</string>
-    <string name="about_description">这段是导出文件格式说明即字段描述</string>
+    <string name="about_description">blablabla............</string>
 
     <string-array name="travel_mode">
         <item>Walk</item>
-        <item>Bicycle</item>
-        <item>Subway</item>
-        <item>Taxi</item>
-        <item>Car</item>
         <item>Run</item>
+        <item>Bicycle</item>
+        <item>Car</item>
+        <item>Taxi</item>
         <item>Bus</item>
-        <item>train</item>
+        <item>Subway</item>
+        <item>Train</item>
     </string-array>
 
 

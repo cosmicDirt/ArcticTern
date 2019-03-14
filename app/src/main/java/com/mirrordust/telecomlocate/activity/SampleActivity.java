@@ -89,7 +89,7 @@ public class SampleActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "telco-data-sampling");
+        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "arctic:sampling");
         wakeLock.acquire();
     }
 

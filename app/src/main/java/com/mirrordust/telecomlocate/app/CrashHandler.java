@@ -71,7 +71,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             @Override
             public void run() {
                 Looper.prepare();
-                Toast.makeText(mContext, "abnormal termination of program, logs in /Documents/SignalStrength/Log", Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, "abnormal termination of program, logs in /Documents/TelecomLocate/Log", Toast.LENGTH_LONG).show();
                 Looper.loop();
             }
         }.start();
@@ -107,7 +107,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     }
 
     private String saveCrashInfo2File(Throwable ex) {
-        /*StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, String> entry : infos.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
@@ -130,8 +130,10 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             String dateTime = sdf.format(new Date());
             String fileName = String.format("crashlog_%s.log", dateTime);
             if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                File dir1 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), mContext.getString(R.string.app_dir_name));
-                File dir = new File(dir1, mContext.getString(R.string.log_dir_name));
+//                File dir1 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), mContext.getString(R.string.app_dir_name));
+                File dir1 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "TelecomLocate");
+//                File dir = new File(dir1, mContext.getString(R.string.log_dir_name));
+                File dir = new File(dir1, "Log");
                 if (!dir.mkdirs()) {
                     Log.e(TAG, "Directory not created");
                 }
@@ -143,7 +145,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
         return null;
     }
 

@@ -8,7 +8,7 @@ public final class C {
 
     public static final String ARG_SAMPLE_ID = "sample_id";
 
-    public static String GITHUB = "https://github.com/mirrordust";
+    public static String GITHUB = "https://github.com/mirrordust/ArcticTern";
 
     public static String APP_URL = "no";
 

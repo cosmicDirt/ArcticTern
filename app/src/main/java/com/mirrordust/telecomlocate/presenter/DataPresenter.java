@@ -7,6 +7,7 @@ import android.util.LongSparseArray;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.mirrordust.telecomlocate.entity.Barometric;
 import com.mirrordust.telecomlocate.entity.BaseStation;
 import com.mirrordust.telecomlocate.entity.Battery;
 import com.mirrordust.telecomlocate.entity.DataSet;
@@ -178,10 +179,12 @@ public class DataPresenter implements DataContract.Presenter {
     private String sampleMR(Sample s) {
         StringBuilder sb = new StringBuilder();
         sb.append(s.getTime()).append(sep)
+                .append(s.getMode()).append(sep)
                 .append(buildLatLongString(s.getLatLng())).append(sep)
                 .append(buildSignalString(s.getSignal())).append(sep)
                 .append(buildBatteryString(s.getBtry())).append(sep)
                 .append(buildGeomagnetismString(s.getGm())).append(sep)
+                .append(buildBarometricString(s.getBaro())).append(sep)
                 .append(buildBaseStationString(s.getMBS())).append(sep)
                 .append(s.getBSList().size());
         for (int i = 0; i < s.getBSList().size(); i++) {
@@ -211,6 +214,10 @@ public class DataPresenter implements DataContract.Presenter {
         return String.valueOf(gm.getX()) + sep + gm.getY() + sep +
                 gm.getZ() + sep + gm.getAlpha() + sep +
                 gm.getBeta() + sep + gm.getGamma();
+    }
+
+    private String buildBarometricString(Barometric baro) {
+        return String.valueOf(baro.getPressure());
     }
 
     private String buildBaseStationString(BaseStation bs) {

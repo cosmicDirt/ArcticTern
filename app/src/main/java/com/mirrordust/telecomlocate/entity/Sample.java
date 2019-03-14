@@ -40,6 +40,8 @@ public class Sample extends RealmObject {
 
     private Geomagnetism gm;                // geomagnetic measurements
 
+    private Barometric baro;                // barometric pressure
+
     public Sample() {
         mID = UUID.randomUUID().toString();
         time = System.currentTimeMillis();
@@ -126,6 +128,14 @@ public class Sample extends RealmObject {
         this.gm = gm;
     }
 
+    public Barometric getBaro() {
+        return baro;
+    }
+
+    public void setBaro(Barometric baro) {
+        this.baro = baro;
+    }
+
     @Override
     public String toString() {
         return "Sample{" +
@@ -139,6 +149,7 @@ public class Sample extends RealmObject {
                 ", signal=" + signal +
                 ", btry=" + btry +
                 ", gm=" + gm +
+                ", baro=" + baro +
                 '}';
     }
 }

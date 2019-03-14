@@ -58,6 +58,7 @@
             android:layout_below="@id/ll_version"
             android:background="?android:selectableItemBackground"
             android:clickable="true"
+            android:focusable="true"
             android:orientation="horizontal">
 
             <ImageView

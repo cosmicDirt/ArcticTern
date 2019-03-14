@@ -4,6 +4,7 @@ import android.content.Context;
 import android.location.Location;
 import android.util.Log;
 
+import com.mirrordust.telecomlocate.entity.Barometric;
 import com.mirrordust.telecomlocate.entity.BaseStation;
 import com.mirrordust.telecomlocate.entity.Battery;
 import com.mirrordust.telecomlocate.entity.Geomagnetism;
@@ -16,7 +17,7 @@ import java.util.List;
 import io.realm.RealmList;
 import rx.Observable;
 import rx.functions.Func4;
-import rx.functions.Func5;
+import rx.functions.Func6;
 
 /**
  * Created by LiaoShanhe on 2017/07/18/018.
@@ -30,6 +31,7 @@ public class SampleManager {
     private BaseStationManager mBaseStationManager;
     private BatteryManager mBatteryManager;
     private GeomagneticManager mGeomagneticManager;
+    private BarometricManager mBarometricManager;
     private Context mContext;
 
     public SampleManager(Context context) {
@@ -40,6 +42,7 @@ public class SampleManager {
         mBaseStationManager = new BaseStationManager(mContext);
         mBatteryManager = new BatteryManager(mContext);
         mGeomagneticManager = new GeomagneticManager(mContext);
+        mBarometricManager = new BarometricManager(mContext);
     }
 
     public Observable<Sample> fetchRecord() {
@@ -48,9 +51,10 @@ public class SampleManager {
                 mBaseStationManager.nerbyTower(),
                 mBatteryManager.getBatteryLevel(),
                 mGeomagneticManager.getGeomagneticInfo(),
-                new Func5<Signal, Location, List<BaseStation>, Battery, Geomagnetism, Sample>() {
+                mBarometricManager.getBarometerPressure(),
+                new Func6<Signal, Location, List<BaseStation>, Battery, Geomagnetism, Barometric,Sample>() {
                     @Override
-                    public Sample call(Signal signalRecord, Location location, List<BaseStation> cellularTowers, Battery battery, Geomagnetism geomagnetic) {
+                    public Sample call(Signal signalRecord, Location location, List<BaseStation> cellularTowers, Battery battery, Geomagnetism geomagnetic, Barometric barometric) {
                         Log.v(TAG, "start creating record...");
                         Sample record = new Sample();
                         if (location != null) {
@@ -82,6 +86,7 @@ public class SampleManager {
                         record.setSignal(signalRecord);
                         record.setMBS(mBaseStationManager.getConnectedTower());
                         record.setGm(geomagnetic);
+                        record.setBaro(barometric);
 
                         return record;
                     }

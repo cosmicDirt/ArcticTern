@@ -78,7 +78,7 @@ public class DetailFragment extends Fragment {
 
         //time location mode
         detailItems.add(new DetailItem("", ""));
-        detailItems.add(new DetailItem("Basis:", ""));
+        detailItems.add(new DetailItem("[ Basis ]", ""));
         detailItems.add(new DetailItem("time", Utils.timestamp2LocalTime(sample.getTime())));
         detailItems.add(new DetailItem("longitude", Double.toString(sample.getLatLng().getLongitude())));
         detailItems.add(new DetailItem("latitude", Double.toString(sample.getLatLng().getLatitude())));
@@ -88,7 +88,7 @@ public class DetailFragment extends Fragment {
         detailItems.add(new DetailItem("mode", sample.getMode()));
         //BS list
         detailItems.add(new DetailItem("", ""));
-        detailItems.add(new DetailItem("BS list:", ""));
+        detailItems.add(new DetailItem("[ BS list ]", ""));
         for (int i = 0; i < sample.getBSList().size(); i++) {
             BaseStation bs = sample.getBSList().get(i);
             detailItems.add(new DetailItem(String.format("# %s ---------", i + 1), ""));
@@ -107,7 +107,7 @@ public class DetailFragment extends Fragment {
         }
         //Connected base station
         detailItems.add(new DetailItem("", ""));
-        detailItems.add(new DetailItem("Connected BS:", ""));
+        detailItems.add(new DetailItem("[ Connected BS ]", ""));
         detailItems.add(new DetailItem("mcc", Integer.toString(sample.getMBS().getMcc())));
         detailItems.add(new DetailItem("mnc", Integer.toString(sample.getMBS().getMnc())));
         detailItems.add(new DetailItem("lac", Integer.toString(sample.getMBS().getLac())));
@@ -122,7 +122,7 @@ public class DetailFragment extends Fragment {
         detailItems.add(new DetailItem("type", sample.getMBS().getType()));
         //Mobile signal strength
         detailItems.add(new DetailItem("", ""));
-        detailItems.add(new DetailItem("Mobile signal strength:", ""));
+        detailItems.add(new DetailItem("[ Mobile signal strength ]", ""));
         detailItems.add(new DetailItem("dbm", Integer.toString(sample.getSignal().getDbm())));
         detailItems.add(new DetailItem("isGsm", Boolean.toString(sample.getSignal().isGsm())));
         detailItems.add(new DetailItem("signalToNoiseRatio", Integer.toString(sample.getSignal().getSignalToNoiseRatio())));
@@ -130,18 +130,22 @@ public class DetailFragment extends Fragment {
         detailItems.add(new DetailItem("level", Integer.toString(sample.getSignal().getLevel())));
         //Battery
         detailItems.add(new DetailItem("", ""));
-        detailItems.add(new DetailItem("Battery:", ""));
+        detailItems.add(new DetailItem("[ Battery ]", ""));
         detailItems.add(new DetailItem("level", Double.toString(sample.getBtry().getLevel())));
         detailItems.add(new DetailItem("capacity", Double.toString(sample.getBtry().getCapacity())));
         //Geomagnetism
         detailItems.add(new DetailItem("", ""));
-        detailItems.add(new DetailItem("Geomagnetism:", ""));
+        detailItems.add(new DetailItem("[ Geomagnetism ]", ""));
         detailItems.add(new DetailItem("x", Double.toString(sample.getGm().getX())));
         detailItems.add(new DetailItem("y", Double.toString(sample.getGm().getY())));
         detailItems.add(new DetailItem("z", Double.toString(sample.getGm().getZ())));
         detailItems.add(new DetailItem("α", Double.toString(sample.getGm().getAlpha())));
         detailItems.add(new DetailItem("β", Double.toString(sample.getGm().getBeta())));
         detailItems.add(new DetailItem("γ", Double.toString(sample.getGm().getGamma())));
+        //Barometric
+        detailItems.add(new DetailItem("", ""));
+        detailItems.add(new DetailItem("[ Barometric ]", ""));
+        detailItems.add(new DetailItem("pressure", Double.toString(sample.getBaro().getPressure())));
         return detailItems;
     }
 }
