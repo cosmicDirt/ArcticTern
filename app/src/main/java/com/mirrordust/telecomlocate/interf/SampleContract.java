@@ -18,6 +18,8 @@ public interface SampleContract {
 
         void showConfirmStopDialog();
 
+        void showControlPanel();
+
         void showConfirmDiscardDialog();
 
         void showSaveDataDialog();

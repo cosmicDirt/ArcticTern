@@ -24,10 +24,14 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -153,9 +157,9 @@ public class SampleActivity extends AppCompatActivity
         mRecyclerView.setAdapter(null);
         mPresenter.unBindService(this);
         mPresenter.unsubscribe();
-        if (wakeLock!=null&&wakeLock.isHeld()){
+        if (wakeLock != null && wakeLock.isHeld()){
             wakeLock.release();
-            wakeLock=null;
+            wakeLock = null;
         }
     }
 
@@ -343,6 +347,60 @@ public class SampleActivity extends AppCompatActivity
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    @Override
+    public void showControlPanel() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+
+        // Pass null as the parent view because its going in the dialog layout
+        final View controlPanelView = inflater.inflate(R.layout.controlpanel, null);
+        final RadioGroup radioGroup = (RadioGroup) controlPanelView.findViewById(R.id.motion_modes);
+        final EditText customMode = (EditText) controlPanelView.findViewById(R.id.mode_custom);
+
+        builder.setView(controlPanelView)
+                .setPositiveButton("Record", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (isPermissionGranted()) {
+                            String theMode;
+                            // start using selected or typed mode
+                            int selectedID = radioGroup.getCheckedRadioButtonId();
+                            RadioButton selectedButton = (RadioButton) controlPanelView.findViewById(selectedID);
+                            String mode1 = String.valueOf(selectedButton.getText());
+
+                            String mode2 = String.valueOf(customMode.getText());
+
+                            if (!mode2.equals("")) {
+                                theMode = mode2;
+                            } else {
+                                theMode = mode1;
+                                if (selectedID == R.id.mode_other) {
+                                    theMode = "not-set";
+                                }
+                            }
+
+                            mPresenter.startSampling(theMode, getApplicationContext());
+                        } else {
+                            requestPermissions();
+                        }
+                    }
+                })
+                .setNeutralButton("Stop", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mPresenter.stopSampling();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();

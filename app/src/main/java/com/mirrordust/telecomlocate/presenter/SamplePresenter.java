@@ -100,11 +100,13 @@ public class SamplePresenter implements SampleContract.Presenter, OnAddOrUpdateS
 
     @Override
     public void stopSampling() {
-        mSampleService.stopCollecting();
-        mRecording = false;
-        mSampleView.setActivityTitle("TelecomLocate");
-        mSampleView.setFabIconSampling(false);
-        displayMainView();
+        if (isRecording()) {
+            mSampleService.stopCollecting();
+            mRecording = false;
+            mSampleView.setActivityTitle("TelecomLocate");
+            mSampleView.setFabIconSampling(false);
+            displayMainView();
+        }
     }
 
     @Override
@@ -140,29 +142,36 @@ public class SamplePresenter implements SampleContract.Presenter, OnAddOrUpdateS
 
     @Override
     public void onFabClick() {
-        if (isRecording()) {
-            mSampleView.showConfirmStopDialog();
-        } else {
-            mSampleView.checkPermission();
-        }
+        mSampleView.showControlPanel();
+//        if (isRecording()) {
+//            mSampleView.showConfirmStopDialog();
+//        } else {
+//            mSampleView.checkPermission();
+//        }
     }
 
 
     @Override
     public void startSampling(String mode, Context context) {
-        mSampleView.switchMainView(true);
         mMode = mode;
-        if (!mSampleService.isRecordManagerInitialized()) {
-            mSampleService.setRecordManager(context);
+
+        if (!isRecording()) {
+            mSampleView.switchMainView(true);
+
+            if (!mSampleService.isRecordManagerInitialized()) {
+                mSampleService.setRecordManager(context);
+            }
+            if (!mSampleService.isSamplePresenterInitialized()) {
+                mSampleService.setSamplePresenter(this);
+            }
+            mSampleService.setMode(mMode);
+            mSampleService.startCollecting();
+            mRecording = true;
+            mSampleView.setActivityTitle("Recording...");
+            mSampleView.setFabIconSampling(true);
+        } else {
+            mSampleService.setMode(mMode);
         }
-        if (!mSampleService.isSamplePresenterInitialized()) {
-            mSampleService.setSamplePresenter(this);
-        }
-        mSampleService.setMode(mMode);
-        mSampleService.startCollecting();
-        mRecording = true;
-        mSampleView.setActivityTitle("Recording...");
-        mSampleView.setFabIconSampling(true);
     }
 
     @Override
