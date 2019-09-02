@@ -171,24 +171,23 @@ public class DataPresenter implements DataContract.Presenter {
         return sb.toString();
     }
 
-    // TODO: 2017/10/20 将 ！！！运动模式！！！ 导出 // FIXME: 2017/10/20
     private String MRHeader(int size) {
         return String.format("%s\n", size);
     }
 
     private String sampleMR(Sample s) {
         StringBuilder sb = new StringBuilder();
-        sb.append(s.getTime()).append(sep)
-                .append(s.getMode()).append(sep)
-                .append(buildLatLongString(s.getLatLng())).append(sep)
-                .append(buildSignalString(s.getSignal())).append(sep)
-                .append(buildBatteryString(s.getBtry())).append(sep)
-                .append(buildGeomagnetismString(s.getGm())).append(sep)
-                .append(buildBarometricString(s.getBaro())).append(sep)
-                .append(buildBaseStationString(s.getMBS())).append(sep)
-                .append(s.getBSList().size());
+        sb.append(s.getTime()).append(sep)//1
+                .append(s.getMode()).append(sep)//2
+                .append(buildLatLongString(s.getLatLng())).append(sep)//3，4，5，6，7
+                .append(buildSignalString(s.getSignal())).append(sep)//8，9，10，11，12
+                .append(buildBatteryString(s.getBtry())).append(sep)//13，14
+                .append(buildGeomagnetismString(s.getGm())).append(sep)//15，16，17，18，19，20
+                .append(buildBarometricString(s.getBaro())).append(sep)//21
+                .append(buildBaseStationString(s.getMBS())).append(sep)//22，23，24，25，26，27，28，29，30，31，32，33
+                .append(s.getBSList().size());//34
         for (int i = 0; i < s.getBSList().size(); i++) {
-            sb.append(sep).append(buildBaseStationString(s.getBSList().get(i)));
+            sb.append(sep).append(buildBaseStationString(s.getBSList().get(i)));//每次12个
         }
         sb.append("\n");
         return sb.toString();
