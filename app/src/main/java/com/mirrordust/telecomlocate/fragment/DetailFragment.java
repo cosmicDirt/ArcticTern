@@ -26,6 +26,7 @@ public class DetailFragment extends Fragment {
 
     private static final String TAG = "DetailFragment";
     private RecyclerView mRecyclerView;
+    private PredViewModel predViewModel;
 
     public DetailFragment() {
         // Required empty public constructor
@@ -73,6 +74,7 @@ public class DetailFragment extends Fragment {
         String mID = parentActivity.getSampleId();
         List<DetailItem> detailItems = new ArrayList<>();
         Sample sample = DataHelper.getSample(parentActivity.getRealm(), mID);
+
         //ID
         detailItems.add(new DetailItem("ID:", mID));
 
@@ -147,5 +149,10 @@ public class DetailFragment extends Fragment {
         detailItems.add(new DetailItem("[ Barometric ]", ""));
         detailItems.add(new DetailItem("pressure", Double.toString(sample.getBaro().getPressure())));
         return detailItems;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
     }
 }

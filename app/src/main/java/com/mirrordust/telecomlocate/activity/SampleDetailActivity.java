@@ -13,6 +13,8 @@ import com.mirrordust.telecomlocate.R;
 import com.mirrordust.telecomlocate.adapter.SectionsPagerAdapter;
 import com.mirrordust.telecomlocate.fragment.DetailFragment;
 import com.mirrordust.telecomlocate.fragment.MapFragment;
+
+import com.mirrordust.telecomlocate.fragment.PredFragment;
 import com.mirrordust.telecomlocate.util.C;
 
 import java.util.ArrayList;
@@ -47,11 +49,13 @@ public class SampleDetailActivity extends AppCompatActivity {
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(new DetailFragment());
         fragments.add(new MapFragment());
+        fragments.add(new PredFragment());
 
         // fragment titles
         List<String> titles = new ArrayList<>();
         titles.add(getString(R.string.detail_tab_title_1));
         titles.add(getString(R.string.detail_tab_title_2));
+        titles.add(getString(R.string.detail_tab_title_3));
 
         mSectionsPagerAdapter = new
                 SectionsPagerAdapter(getSupportFragmentManager(), fragments, titles);

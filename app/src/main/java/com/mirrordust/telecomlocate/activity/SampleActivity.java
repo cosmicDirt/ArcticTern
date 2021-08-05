@@ -207,7 +207,10 @@ public class SampleActivity extends AppCompatActivity
                 break;
             case R.id.nav_prediction:
                 // TODO: 2017/07/30/030 prediction
-                Toast.makeText(this, "Not available now", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(this, "Not available now", Toast.LENGTH_SHORT).show();
+                // TODO: 2021/07/21 add prediction
+                Intent prediction_intent = new Intent(this, PredictionActivity.class);
+                startActivity(prediction_intent);
                 break;
             case R.id.nav_setting:
                 Intent setting_intent = new Intent(this, SettingsActivity.class);
