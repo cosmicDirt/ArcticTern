@@ -36,7 +36,7 @@ android {
         }
         python {
             // 指定python路径
-            buildPython "E:\\Anaconda\\python.exe"
+            buildPython "E:\\miniconda\\envs\\python_3.7.3\\python.exe"
             pip{
                 install "pandas"
                 install "numpy"
