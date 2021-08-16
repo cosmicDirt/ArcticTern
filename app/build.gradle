@@ -5,7 +5,8 @@ apply plugin: 'com.chaquo.python'
 android {
     compileSdkVersion 25
     defaultConfig {
-        applicationId "com.mirrordust.telecomlocate"
+        //applicationId "com.mirrordust.telecomlocate"
+        applicationId "com.fruitbasket.audioplatform"
         minSdkVersion 21
         targetSdkVersion 25
         versionCode 1
@@ -32,7 +33,7 @@ android {
         }
     defaultConfig {
         ndk {
-            abiFilters 'armeabi-v7a','x86'//, 'armeabi-v7a', 'x86_64', 'arm64-v8a', mips, mips64...加入需要生成的文件夹
+            abiFilters 'arm64-v8a','armeabi-v7a','x86'//, 'armeabi-v7a', 'x86_64', 'arm64-v8a', mips, mips64...加入需要生成的文件夹
         }
         python {
             // 指定python路径

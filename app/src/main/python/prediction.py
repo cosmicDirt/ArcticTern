@@ -1,13 +1,14 @@
 import joblib
 import pandas
 import pickle
+import os
 from os.path import dirname, join
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from com.chaquo.python import Python
 import json
 
-# files_dir = str(Python.getPlatform().getApplication().getFilesDir())
+files_dir = str(Python.getPlatform().getApplication().getFilesDir())
 # ss_1=-1, ss_2=-1, ss_3=-1, ss_4=-1, ss_5=-1, ss_6=-1, ss_7=-1,ss_8=-1,
 # lac_1=-1, lac_2=-1, lac_3=-1, lac_4=-1, lac_5=-1, lac_6=-1, lac_7=-1,lac_8=-1,
 # cid_1=-1, cid_2=-1, cid_3=-1, cid_4=-1, cid_5=-1, cid_6=-1, cid_7=-1,cid_8=-1,
@@ -15,13 +16,15 @@ import json
 # lon=-1, lon2=-1, lon3=-1, lon4=-1, lon5=-1, lon6=-1, lon7=-1,lon8=-1,
 # lat=-1, lat2=-1, lat3=-1, lat4=-1, lat5=-1, lat6=-1, lat7=-1,lat8=-1
 def prediction_rf(parameterJson):
-    # fileX = join(dirname(__file__), "trainX.csv")
-    # X=pd.read_csv(fileX)
-    # fileY = join(dirname(__file__), "trainY.csv")
-    # Y=pd.read_csv(fileY)
-    # regr = RandomForestRegressor().fit(X, Y)
-    # joblib.dump(value=regr,filename=files_dir+"\\rf32.pkl",compress=3)
-    filename = join(dirname(__file__), "rf32.pkl")
+    if not os.path.exists(files_dir+"\\rf32.pkl"):
+        fileX = join(dirname(__file__), "trainX.csv")
+        X=pd.read_csv(fileX)
+        fileY = join(dirname(__file__), "trainY.csv")
+        Y=pd.read_csv(fileY)
+        regr = RandomForestRegressor().fit(X, Y)
+        joblib.dump(value=regr,filename=files_dir+"\\rf32.pkl",compress=3)
+
+    filename = join(dirname(__file__), files_dir+"\\rf32.pkl")
     model = joblib.load(filename)
     dict=json.loads(str(parameterJson))[0]
 
