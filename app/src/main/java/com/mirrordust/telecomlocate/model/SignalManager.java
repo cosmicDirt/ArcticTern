@@ -41,7 +41,8 @@ public class SignalManager extends PhoneStateListener {
         int dB = -120;
         if (mTelephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_LTE) {
             // For Lte SignalStrength: dbm = ASU - 140.
-            dB = Integer.parseInt(parts[8]) - 140;
+            //dB = Integer.parseInt(parts[8]) - 140;
+            dB = signalStrength.getGsmSignalStrength() - 140;
             /*int ltesignal = Integer.parseInt(parts[9]);
             if (ltesignal < -2) {
                 dB = ltesignal;

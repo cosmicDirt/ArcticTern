@@ -27,15 +27,10 @@ import com.mirrordust.telecomlocate.entity.BaseStation;
 import com.mirrordust.telecomlocate.entity.Sample;
 import com.mirrordust.telecomlocate.livedata.MRdata;
 import com.mirrordust.telecomlocate.model.DataHelper;
-import com.srplab.www.starcore.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 
 public class PredFragment extends Fragment {
@@ -64,144 +59,6 @@ public class PredFragment extends Fragment {
         return new PredFragment();
     }
 
-    public StarSrvGroupClass srvGroup;
-    public static SampleDetailActivity Host;
-
-    public void click(View view) {
-
-        File destDir = new File("/data/data/" + getActivity().getPackageName() + "/files");
-        if (!destDir.exists())
-            destDir.mkdirs();
-        java.io.File python2_7_libFile = new java.io.File("/data/data/" + getActivity().getPackageName() + "/files/python3.7.zip");
-
-        if (!python2_7_libFile.exists()) {
-            try {
-                copyFile(getActivity(), "python3.7.zip", null);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        try {
-            copyFile(getActivity(), "_struct.cpython-37m.so", null);
-            copyFile(getActivity(), "binascii.cpython-37m.so", null);
-            copyFile(getActivity(), "zlib.cpython-37m.so", null);
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-
-        String pystring = null;
-
-        try {
-            AssetManager assetManager = getActivity().getAssets();
-            InputStream dataSource = assetManager.open("prediction.py");
-            int size = dataSource.available();
-            byte[] buffer = new byte[size];
-            dataSource.read(buffer);
-            dataSource.close();
-            pystring = new String(buffer);
-        } catch (IOException e) {
-            System.out.println(e);
-        }
-
-        try {
-            //--load python34 core library first;
-            System.load(getActivity().getApplicationInfo().nativeLibraryDir + "/libpython3.7m.so");
-        } catch (UnsatisfiedLinkError ex) {
-            System.out.println(ex.toString());
-        }
-
-        /*----init starcore----*/
-
-        StarCoreFactoryPath.StarCoreCoreLibraryPath = getActivity().getApplicationInfo().nativeLibraryDir;
-
-        StarCoreFactoryPath.StarCoreShareLibraryPath = getActivity().getApplicationInfo().nativeLibraryDir;
-
-        StarCoreFactoryPath.StarCoreOperationPath = "/data/data/" + getActivity().getPackageName() + "/files";
-
-        final StarCoreFactory starcore = StarCoreFactory.GetFactory();
-        Integer s = new Random().nextInt(100);
-        StarServiceClass Service = starcore._InitSimple("MathTest" + s, "123", 0, 0);
-        srvGroup = (StarSrvGroupClass) Service._Get("_ServiceGroup");
-        Service._CheckPassword(false);
-        starcore._SRPLock();
-        srvGroup = starcore._GetSrvGroup(0);
-        Service = srvGroup._GetService("test", "123");
-        if (Service == null) {
-            Service = starcore._InitSimple("test", "123", 0, 0);
-        } else {
-            Service._CheckPassword(false);
-        }
-        Service._CheckPassword(false);
-
-
-//        StarServiceClass  Service = starcore._InitSimple("test", "123", 0, 0);
-//        SrvGroup = (StarSrvGroupClass) Service._Get("_ServiceGroup");
-//        Service._CheckPassword(false);
-
-        /*----run python code----*/
-        srvGroup._InitRaw("python37", Service);
-        StarObjectClass python = Service._ImportRawContext("python", "", false, "");
-        // 设置Python模块加载路径
-        python._Call("import", "sys");
-        StarObjectClass pythonSys = python._GetObject("sys");
-        StarObjectClass pythonPath = (StarObjectClass) pythonSys._Get("path");
-        pythonPath._Call("insert", 0, "/data/data/" + getActivity().getPackageName() + "/files/python3.7.zip");
-        pythonPath._Call("insert", 0, getActivity().getApplicationInfo().nativeLibraryDir);
-        pythonPath._Call("insert", 0, "/data/data/" + getActivity().getPackageName() + "/files");
-        //
-        starcore._SRPUnLock();
-
-
-        /*----run python code----*/
-//        srvGroup._InitRaw("python37", Service);
-//        StarObjectClass python = Service._ImportRawContext("python", "", false, "");
-//        python._Call("import", "sys");
-//        StarObjectClass pythonSys = python._GetObject("sys");
-//        StarObjectClass pythonPath = (StarObjectClass) pythonSys._Get("path");
-//        pythonPath._Call("insert", 0, "/data/data/" + getActivity().getPackageName() + "/files/python3.7.zip");
-//        pythonPath._Call("insert", 0, getActivity().getApplicationInfo().nativeLibraryDir);
-//        pythonPath._Call("insert", 0, "/data/data/" + getActivity().getPackageName() + "/files");
-//        python._Call("execute", pystring);
-//
-        Object object = python._Call("add", 11, 22);
-//
-        Toast.makeText(getActivity(), object.toString(), Toast.LENGTH_LONG).show();
-//        String CorePath = "/data/data/" + getActivity().getPackageName() + "/files";
-
-//        python._Set("JavaClass", CallBackClass.class);
-//        Service._DoFile("python", CorePath + "/test_calljava.py", "");
-    }
-
-    private void copyFile(Activity c, String Name, String desPath) throws IOException {
-
-        File outfile = null;
-        if (desPath != null)
-            outfile = new File("/data/data/" + getActivity().getPackageName() + "/files/" + desPath + Name);
-        else
-            outfile = new File("/data/data/" + getActivity().getPackageName() + "/files/" + Name);
-
-        outfile.createNewFile();
-        FileOutputStream out = new FileOutputStream(outfile);
-
-        byte[] buffer = new byte[1024];
-        InputStream in;
-        int readLen = 0;
-
-        if (desPath != null)
-            in = c.getAssets().open(desPath + Name);
-        else
-            in = c.getAssets().open(Name);
-        while ((readLen = in.read(buffer)) != -1) {
-            out.write(buffer, 0, readLen);
-        }
-
-        out.flush();
-        in.close();
-        out.close();
-
-    }
 
     // 初始化Python环境
     public void initPython() {
@@ -303,7 +160,7 @@ public class PredFragment extends Fragment {
                 json.put("lon",String.valueOf(mbs.getLon()));
                 json.put("lat",String.valueOf(mbs.getLat()));
                 if(!bslist.isEmpty()) {
-                    for(int i=2;i<bslist.size()+2;i++){
+                    for(int i=2;i<Math.min(bslist.size(),8)+2;i++){
                         json.put("ss_"+i,String.valueOf(bslist.get(i-2).getDbm()));
                         json.put("lac_"+i,String.valueOf(bslist.get(i-2).getLac()));
                         json.put("cid_"+i,String.valueOf(bslist.get(i-2).getCid()));
