@@ -7,6 +7,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -41,13 +42,15 @@ public class PredFragment extends Fragment {
     private double actualPosX;
     private double actualPosY;
     //lv中data
-    private List<String> data;
+    private List<PreFragmentResult> data;
     private PredViewModel mViewModel;
     private ListView lv;
-    private ArrayAdapter<String> arrayAdapter;
+    private PredictionAdapter arrayAdapter;
     private static final String[] strs = new String[]{
             "first", "second", "third", "fourth", "fifth"
     };
+    //记录时间
+    private long startTime;
 
     public PredFragment() {
         x=new ArrayList<>();
@@ -82,8 +85,8 @@ public class PredFragment extends Fragment {
         predictionAsyncTask.execute();
         lv = (ListView) view.findViewById(R.id.lv);
         //为ListView设置Adapter来绑定数据
-        arrayAdapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_1, updateData());
+        updateData();
+        arrayAdapter = new PredictionAdapter(data);
         lv.setAdapter(arrayAdapter);
 
         return view;
@@ -114,20 +117,36 @@ public class PredFragment extends Fragment {
         super.onAttach(context);
     }
 
-    private List<String> updateData() {
+    private List<PreFragmentResult> updateData() {
         if(data.isEmpty()) {
+            //获取起始时间
+            startTime=new Date().getTime();
             for (int i = 0; i < 1; i++) {
-                data.add("random forest prediction:");
-                data.add("predicted position:predicting...");
-                data.add("actual position:"+actualPosX+";"+actualPosY);
+                PreFragmentResult temp=new PreFragmentResult("random forest prediction","predicting...",
+                        actualPosX+";"+actualPosY,"predicting...","predicting...");
+                data.add(temp);
+//                data.add("random forest prediction:");
+//                data.add("predicted position:predicting...");
+//                data.add("actual position:"+actualPosX+";"+actualPosY);
             }
         }
         else{
             data.clear();
-            for (int i = 0; i < 1; i++) {
-                data.add("random forest prediction:");
-                data.add("predicted position:" + x.get(i) + ";" + y.get(i));
-                data.add("actual position:"+actualPosX+";"+actualPosY);
+            // 获取间隔时间
+            long gapTime=new Date().getTime()-startTime;
+            for (int i = 0; i < 1;i++) {
+                //计算误差
+                float[] results=new float[1];
+                Location.distanceBetween(x.get(i), y.get(i), actualPosX, actualPosY, results);
+                //打包
+                PreFragmentResult temp=new PreFragmentResult("random forest prediction",x.get(i) + ";" + y.get(i),
+                        actualPosX+";"+actualPosY,Float.toString(results[0]),Long.toString(gapTime));
+                data.add(temp);
+                System.out.println("random forest prediction"+x.get(i) + ";" + y.get(i)+
+                        actualPosX+";"+actualPosY+Float.toString(results[0])+Long.toString(gapTime));
+//                data.add("random forest prediction:");
+//                data.add("predicted position:" + x.get(i) + ";" + y.get(i));
+//                data.add("actual position:"+actualPosX+";"+actualPosY);
             }
         }
         return data;
@@ -201,4 +220,52 @@ public class PredFragment extends Fragment {
             arrayAdapter.notifyDataSetChanged();
         }
     }
+
+    public class PredictionAdapter extends BaseAdapter {
+        public List<PreFragmentResult> results;
+
+        public PredictionAdapter(){
+        }
+
+        public PredictionAdapter(List<PreFragmentResult> temp){
+            results=temp;
+        }
+
+        public int getCount() {
+            // TODO Auto-generated method stub
+            return results.size();
+        }
+
+        public Object getItem(int arg0) {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        public long getItemId(int position) {
+            // TODO Auto-generated method stub
+            return position;
+        }
+
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            LayoutInflater inflater = getLayoutInflater();
+            View row;
+            row = inflater.inflate(R.layout.fragment_pred_custom, parent, false);
+            TextView title, prediction,actually,error,time;
+//            ImageView i1;
+            title = (TextView) row.findViewById(R.id.title);
+            prediction = (TextView) row.findViewById(R.id.predictionValue);
+            actually = (TextView) row.findViewById(R.id.actualValue);
+            error = (TextView) row.findViewById(R.id.errorValue);
+            time = (TextView) row.findViewById(R.id.timeValue);
+            title.setText(this.results.get(position).title);
+            prediction.setText(this.results.get(position).prediction);
+            actually.setText(this.results.get(position).actually);
+            error.setText(this.results.get(position).error);
+            time.setText(this.results.get(position).time);
+            return (row);
+        }
+
+    }
+
 }
