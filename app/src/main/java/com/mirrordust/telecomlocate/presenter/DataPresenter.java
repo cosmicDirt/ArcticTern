@@ -1,7 +1,11 @@
 package com.mirrordust.telecomlocate.presenter;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Environment;
+import android.os.IBinder;
 import android.util.Log;
 import android.util.LongSparseArray;
 import android.widget.Toast;
@@ -20,6 +24,8 @@ import com.mirrordust.telecomlocate.interf.DataContract;
 import com.mirrordust.telecomlocate.model.DataHelper;
 import com.mirrordust.telecomlocate.model.DeviceManager;
 import com.mirrordust.telecomlocate.pojo.UploadResponse;
+import com.mirrordust.telecomlocate.service.DataService;
+import com.mirrordust.telecomlocate.service.SampleService;
 import com.mirrordust.telecomlocate.util.Utils;
 
 import net.gotev.uploadservice.MultipartUploadRequest;
@@ -49,14 +55,12 @@ public class DataPresenter implements DataContract.Presenter {
     private static final String sep = ",";
 
     private LongSparseArray<String> mUploadIDs;
-
     private DataContract.View mDataView;
-
     private DeviceManager mDeviceManager;
-
     private Realm mRealm;
-
     private long currentUploadedIndex;
+    private DataService mDataService;
+    private boolean mBound = false;
 
     private UploadServiceBroadcastReceiver uploadServiceBroadcastReceiver =
             new UploadServiceBroadcastReceiver() {
@@ -103,6 +107,35 @@ public class DataPresenter implements DataContract.Presenter {
         mRealm.close();
     }
 
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            DataService.LocalBinder binder = (DataService.LocalBinder) iBinder;
+            mDataService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            mBound = false;
+        }
+    };
+
+    @Override
+    public void bindService(Context context) {
+        Intent intent = new Intent(context, DataService.class);
+        context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        mBound = true;
+    }
+
+    @Override
+    public void unBindService(Context context) {
+        if (mBound) {
+            mDataService.stopForeground(true);
+            context.unbindService(mConnection);
+            mBound = false;
+        }
+    }
     @Override
     public RealmResults<DataSet> getDataSets() {
         return DataHelper.getAllDataSet(mRealm);
@@ -242,6 +275,24 @@ public class DataPresenter implements DataContract.Presenter {
         mUploadIDs.put(index, uploadID);
     }
 
+
+    public void exportAllDatasets(){
+        RealmResults<DataSet> dataSets=getDataSets();
+        for(int i=0;i<dataSets.size();i++){
+            if(!dataSets.get(i).isExported()) {
+                exportDataSet(dataSets.get(i).getIndex(),dataSets.get(i).getName(),dataSets.get(i).getDesc());
+            }
+        }
+    }
+
+    public void uploadAllDatasets(){
+        RealmResults<DataSet> dataSets=getDataSets();
+        for(int i=0;i<dataSets.size();i++){
+            if(!dataSets.get(i).isUploaded()) {
+                uploadDataSet(dataSets.get(i).getIndex(),dataSets.get(i).getName(),dataSets.get(i).getDesc());
+            }
+        }
+    }
     private String uploadMultipart(Context context, String url, String filePath) {
         String uploadID = null;
         try {

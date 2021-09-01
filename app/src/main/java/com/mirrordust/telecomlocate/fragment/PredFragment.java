@@ -43,19 +43,16 @@ public class PredFragment extends Fragment {
     private double actualPosY;
     //lv中data
     private List<PreFragmentResult> data;
-    private PredViewModel mViewModel;
     private ListView lv;
     private PredictionAdapter arrayAdapter;
-    private static final String[] strs = new String[]{
-            "first", "second", "third", "fourth", "fifth"
-    };
+
     //记录时间
     private long startTime;
 
     public PredFragment() {
-        x=new ArrayList<>();
-        y=new ArrayList<>();
-        data=new ArrayList<>();
+        x = new ArrayList<>();
+        y = new ArrayList<>();
+        data = new ArrayList<>();
     }
 
     public static PredFragment newInstance() {
@@ -81,7 +78,7 @@ public class PredFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_pred, container, false);
         //异步调用python预测算法
-        PredictionAsyncTask predictionAsyncTask=new PredictionAsyncTask();
+        PredictionAsyncTask predictionAsyncTask = new PredictionAsyncTask();
         predictionAsyncTask.execute();
         lv = (ListView) view.findViewById(R.id.lv);
         //为ListView设置Adapter来绑定数据
@@ -96,20 +93,6 @@ public class PredFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-//        mViewModel = ViewModelProviders.of(getActivity()).get(PredViewModel.class);
-//        // TODO: Use the ViewModel
-//        //final PredViewModel PredViewModel = ViewModelProviders.of(getActivity()).get(PredViewModel.class);
-//
-//        //通过observe方法观察ViewModel中字段数据的变化，并在变化时，得到通知
-//        mViewModel.getMRdata().observe((LifecycleOwner) this, new Observer<MRdata>()
-//        {
-//            @Override
-//            public void onChanged(@Nullable MRdata mRdata)
-//            {
-//
-//            }
-//        });
-
     }
 
     @Override
@@ -118,35 +101,29 @@ public class PredFragment extends Fragment {
     }
 
     private List<PreFragmentResult> updateData() {
-        if(data.isEmpty()) {
+        if (data.isEmpty()) {
             //获取起始时间
-            startTime=new Date().getTime();
+            startTime = new Date().getTime();
             for (int i = 0; i < 1; i++) {
-                PreFragmentResult temp=new PreFragmentResult("random forest prediction","predicting...",
-                        actualPosX+";"+actualPosY,"predicting...","predicting...");
+                PreFragmentResult temp = new PreFragmentResult((String) this.getResources().getText(R.string.preAlgorithm1) + " Prediction",
+                        "predicting...", actualPosX + ";" + actualPosY, "predicting...", "predicting...");
                 data.add(temp);
 //                data.add("random forest prediction:");
 //                data.add("predicted position:predicting...");
 //                data.add("actual position:"+actualPosX+";"+actualPosY);
             }
-        }
-        else{
+        } else {
             data.clear();
             // 获取间隔时间
-            long gapTime=new Date().getTime()-startTime;
-            for (int i = 0; i < 1;i++) {
+            long gapTime = new Date().getTime() - startTime;
+            for (int i = 0; i < 1; i++) {
                 //计算误差
-                float[] results=new float[1];
+                float[] results = new float[1];
                 Location.distanceBetween(x.get(i), y.get(i), actualPosX, actualPosY, results);
                 //打包
-                PreFragmentResult temp=new PreFragmentResult("random forest prediction",x.get(i) + ";" + y.get(i),
-                        actualPosX+";"+actualPosY,Float.toString(results[0]),Long.toString(gapTime));
+                PreFragmentResult temp = new PreFragmentResult((String) this.getResources().getText(R.string.preAlgorithm1) + " Prediction",
+                        x.get(i) + ";" + y.get(i), actualPosX + ";" + actualPosY, Float.toString(results[0]), Long.toString(gapTime));
                 data.add(temp);
-                System.out.println("random forest prediction"+x.get(i) + ";" + y.get(i)+
-                        actualPosX+";"+actualPosY+Float.toString(results[0])+Long.toString(gapTime));
-//                data.add("random forest prediction:");
-//                data.add("predicted position:" + x.get(i) + ";" + y.get(i));
-//                data.add("actual position:"+actualPosX+";"+actualPosY);
             }
         }
         return data;
@@ -155,6 +132,7 @@ public class PredFragment extends Fragment {
     public class PredictionAsyncTask extends AsyncTask<Void, Void, List<Double>> {
         JSONObject json;
         Python py;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -163,8 +141,8 @@ public class PredFragment extends Fragment {
             Sample sample = DataHelper.getSample(parentActivity.getRealm(), mID);
             BaseStation mbs = sample.getMBS();
             List<BaseStation> bslist = sample.getBSList();
-            actualPosX=sample.getLatLng().getLongitude();
-            actualPosY=sample.getLatLng().getLatitude();
+            actualPosX = sample.getLatLng().getLongitude();
+            actualPosY = sample.getLatLng().getLatitude();
 
             HashMap<String, String> parameterMap = new HashMap<>();
             initPython();
@@ -173,19 +151,19 @@ public class PredFragment extends Fragment {
             json = new JSONObject();
             try {
                 json.put("ss_1", String.valueOf(mbs.getDbm()));
-                json.put("lac_1",String.valueOf(mbs.getLac()));
-                json.put("cid_1",String.valueOf(mbs.getCid()));
-                json.put("mnc_1",String.valueOf(mbs.getLon()));
-                json.put("lon",String.valueOf(mbs.getLon()));
-                json.put("lat",String.valueOf(mbs.getLat()));
-                if(!bslist.isEmpty()) {
-                    for(int i=2;i<Math.min(bslist.size(),8)+2;i++){
-                        json.put("ss_"+i,String.valueOf(bslist.get(i-2).getDbm()));
-                        json.put("lac_"+i,String.valueOf(bslist.get(i-2).getLac()));
-                        json.put("cid_"+i,String.valueOf(bslist.get(i-2).getCid()));
-                        json.put("mnc_"+i,String.valueOf(bslist.get(i-2).getMnc()));
-                        json.put("lon_"+i,String.valueOf(bslist.get(i-2).getLon()));
-                        json.put("lat_"+i,String.valueOf(bslist.get(i-2).getLat()));
+                json.put("lac_1", String.valueOf(mbs.getLac()));
+                json.put("cid_1", String.valueOf(mbs.getCid()));
+                json.put("mnc_1", String.valueOf(mbs.getLon()));
+                json.put("lon", String.valueOf(mbs.getLon()));
+                json.put("lat", String.valueOf(mbs.getLat()));
+                if (!bslist.isEmpty()) {
+                    for (int i = 2; i < Math.min(bslist.size(), 8) + 2; i++) {
+                        json.put("ss_" + i, String.valueOf(bslist.get(i - 2).getDbm()));
+                        json.put("lac_" + i, String.valueOf(bslist.get(i - 2).getLac()));
+                        json.put("cid_" + i, String.valueOf(bslist.get(i - 2).getCid()));
+                        json.put("mnc_" + i, String.valueOf(bslist.get(i - 2).getMnc()));
+                        json.put("lon_" + i, String.valueOf(bslist.get(i - 2).getLon()));
+                        json.put("lat_" + i, String.valueOf(bslist.get(i - 2).getLat()));
                     }
                 }
             } catch (JSONException e) {
@@ -202,9 +180,9 @@ public class PredFragment extends Fragment {
             String parameterJson = jsonarray.toString();
             PyObject obj1 = py.getModule("prediction").callAttr("prediction_rf", new Kwarg("parameterJson", parameterJson));
             List<PyObject> result = obj1.asList();
-            Double x=result.get(0).toDouble();
-            Double y=result.get(1).toDouble();
-            ArrayList<Double> xy=new ArrayList<>();
+            Double x = result.get(0).toDouble();
+            Double y = result.get(1).toDouble();
+            ArrayList<Double> xy = new ArrayList<>();
             xy.add(x);
             xy.add(y);
             return xy;
@@ -224,11 +202,11 @@ public class PredFragment extends Fragment {
     public class PredictionAdapter extends BaseAdapter {
         public List<PreFragmentResult> results;
 
-        public PredictionAdapter(){
+        public PredictionAdapter() {
         }
 
-        public PredictionAdapter(List<PreFragmentResult> temp){
-            results=temp;
+        public PredictionAdapter(List<PreFragmentResult> temp) {
+            results = temp;
         }
 
         public int getCount() {
@@ -251,7 +229,7 @@ public class PredFragment extends Fragment {
             LayoutInflater inflater = getLayoutInflater();
             View row;
             row = inflater.inflate(R.layout.fragment_pred_custom, parent, false);
-            TextView title, prediction,actually,error,time;
+            TextView title, prediction, actually, error, time;
 //            ImageView i1;
             title = (TextView) row.findViewById(R.id.title);
             prediction = (TextView) row.findViewById(R.id.predictionValue);

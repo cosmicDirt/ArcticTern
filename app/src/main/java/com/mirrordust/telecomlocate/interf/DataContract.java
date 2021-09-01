@@ -55,6 +55,10 @@ public interface DataContract {
         void onResume(Context context);
 
         void onPause(Context context);
+
+        void bindService(Context context);
+
+        void unBindService(Context context);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.mirrordust.telecomlocate.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
+import com.mapbox.mapboxsdk.annotations.PolylineOptions;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -19,12 +21,16 @@ import com.mirrordust.telecomlocate.activity.SampleDetailActivity;
 import com.mirrordust.telecomlocate.entity.Sample;
 import com.mirrordust.telecomlocate.model.DataHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MapFragment extends Fragment {
 
     private static final String TAG = "MapFragment";
     private double longitude;
     private double latitude;
     private MapView mMapView;
+    private List<LatLng> latLngList=new ArrayList<>();
 
     public MapFragment() {
         // Required empty public constructor
@@ -58,6 +64,12 @@ public class MapFragment extends Fragment {
         Sample sample = DataHelper.getSample(parentActivity.getRealm(), mID);
         longitude = sample.getLatLng().getLongitude();
         latitude = sample.getLatLng().getLatitude();
+
+        List<Sample> samples=DataHelper.getNewSamples(parentActivity.getRealm());
+        for(int i=0;i<samples.size();i++) {
+            LatLng latLng=new LatLng(samples.get(i).getLatLng().getLatitude(),samples.get(i).getLatLng().getLongitude());
+            latLngList.add(latLng);
+        }
     }
 
     private void showPoints(MapboxMap mapboxMap) {
@@ -69,6 +81,11 @@ public class MapFragment extends Fragment {
         mapboxMap.addMarker(new MarkerOptions()
                 .position(latLng)
                 .title(longitude+", "+latitude));
+
+        mapboxMap.addPolyline(new PolylineOptions()
+        .addAll(latLngList)
+        .color(Color.parseColor("#3bb2d0"))
+        .width(2));
     }
 
     @Override

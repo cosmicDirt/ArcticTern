@@ -26,7 +26,6 @@ public class DetailFragment extends Fragment {
 
     private static final String TAG = "DetailFragment";
     private RecyclerView mRecyclerView;
-    private PredViewModel predViewModel;
 
     public DetailFragment() {
         // Required empty public constructor

@@ -1,10 +1,8 @@
 package com.mirrordust.telecomlocate.util;
 
 import android.util.Log;
-
 import com.mirrordust.telecomlocate.entity.BaseStation;
 import com.mirrordust.telecomlocate.entity.LatLng;
-
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -97,4 +95,5 @@ public class Utils {
         }
         return new String[]{name.toString(), value.toString()};
     }
+
 }

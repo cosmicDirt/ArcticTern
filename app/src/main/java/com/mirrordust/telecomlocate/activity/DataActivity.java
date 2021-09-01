@@ -1,9 +1,14 @@
 package com.mirrordust.telecomlocate.activity;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Messenger;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -21,6 +26,10 @@ import com.mirrordust.telecomlocate.adapter.DataAdapter;
 import com.mirrordust.telecomlocate.interf.DataContract;
 import com.mirrordust.telecomlocate.model.DeviceManager;
 import com.mirrordust.telecomlocate.presenter.DataPresenter;
+import com.mirrordust.telecomlocate.service.DataService;
+import com.mirrordust.telecomlocate.util.AlarmManagerUtils;
+
+import java.util.List;
 
 public class DataActivity extends AppCompatActivity implements DataContract.View {
 
@@ -34,6 +43,9 @@ public class DataActivity extends AppCompatActivity implements DataContract.View
     // presenter
     private DataContract.Presenter mPresenter;
 
+    //alarm
+    private AlarmManagerUtils alarmManagerUtils;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,8 +58,18 @@ public class DataActivity extends AppCompatActivity implements DataContract.View
 
         setPresenter(new DataPresenter(this, new DeviceManager(this)));
         mPresenter.subscribe();
+        mPresenter.bindService(this);
+
+//        alarmManagerUtils = AlarmManagerUtils.getInstance(this);
+//        alarmManagerUtils.createGetUpAlarmManager();
+//        alarmManagerUtils.getUpAlarmManagerStartWork();
+//        Toast.makeText(getApplicationContext(),"The timing is set successfully",Toast.LENGTH_SHORT).show();
 
         initMainView();
+
+        Intent intent = new Intent(this, DataService.class);
+        startService(intent);
+
     }
 
     private void initMainView() {
@@ -85,6 +107,7 @@ public class DataActivity extends AppCompatActivity implements DataContract.View
     protected void onDestroy() {
         super.onDestroy();
         mRecyclerView.setAdapter(null);
+        mPresenter.unBindService(this);
         mPresenter.unsubscribe();
     }
 
@@ -182,4 +205,18 @@ public class DataActivity extends AppCompatActivity implements DataContract.View
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         return sharedPref.getString("upload_url", getString(R.string.pref_default_upload_url));
     }
+
+    /**
+     * 判断服务是否运行
+     */
+    private boolean isServiceRunning(final String className) {
+        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningServiceInfo> info = activityManager.getRunningServices(Integer.MAX_VALUE);
+        if (info == null || info.size() == 0) return false;
+        for (ActivityManager.RunningServiceInfo aInfo : info) {
+            if (className.equals(aInfo.service.getClassName())) return true;
+        }
+        return false;
+    }
+
 }

@@ -29,15 +29,15 @@ android {
     sourceSets {
         main {
             jniLibs.srcDirs = ['libs']
-            }
         }
+    }
     defaultConfig {
         ndk {
-            abiFilters 'arm64-v8a','armeabi-v7a','x86'//, 'armeabi-v7a', 'x86_64', 'arm64-v8a', mips, mips64...加入需要生成的文件夹
+            abiFilters 'armeabi-v7a','x86'//, 'armeabi-v7a', 'x86_64', 'arm64-v8a', mips, mips64...加入需要生成的文件夹
         }
         python {
             // 指定python路径
-            buildPython "E:\\miniconda\\envs\\python_3.7.3\\python.exe"
+            buildPython "E:\\Anaconda\\python.exe"
             pip{
                 install "pandas"
                 install "numpy"

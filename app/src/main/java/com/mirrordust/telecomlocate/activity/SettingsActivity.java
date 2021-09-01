@@ -44,6 +44,15 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                         case "sampling_interval":
                             if (Long.parseLong(stringValue) <= 0)
                                 return false;
+                        case "save_interval":
+                            if (Long.parseLong(stringValue) <= 0)
+                                return false;
+                        case "export_interval":
+                            if (Long.parseLong(stringValue) <= 0)
+                                return false;
+                        case "upload_interval":
+                            if (Long.parseLong(stringValue) <= 0)
+                                return false;
                         default:
                             preference.setSummary(stringValue);
                             return true;
@@ -142,6 +151,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             setHasOptionsMenu(true);
 
             bindPreferenceSummaryToValue(findPreference("upload_url"));
+            bindPreferenceSummaryToValue(findPreference("save_interval"));
+            bindPreferenceSummaryToValue(findPreference("export_interval"));
+            bindPreferenceSummaryToValue(findPreference("upload_interval"));
         }
 
         @Override

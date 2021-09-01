@@ -40,7 +40,7 @@
 
     <!--prediction activity-->
     <string name="preTitle">Start A Prediction Algorithm</string>
-    <string name="preAlgorithm1">prediction Algorithm1</string>
+    <string name="preAlgorithm1">Random Forest</string>
     <string name="preAlgorithm2">prediction Algorithm2</string>
     <string name="preAlgorithm3">prediction Algorithm3</string>
 
@@ -74,6 +74,12 @@
     <!--data setting-->
     <string name="pref_default_upload_url">http://116.62.124.55:8080/uploads</string>
     <string name="pref_title_upload_url">Upload url</string>
+    <string name="pref_default_save_interval">300</string>
+    <string name="pref_default_export_interval">600</string>
+    <string name="pref_default_upload_interval">1800</string>
+    <string name="pref_title_save_interval">Save interval (in seconds)</string>
+    <string name="pref_title_export_interval">Export interval (in seconds)</string>
+    <string name="pref_title_upload_interval">Upload interval (in seconds)</string>
 
 
     <!--about activity-->
