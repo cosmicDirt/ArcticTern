@@ -36,12 +36,13 @@ public class DataService extends Service {
     private static final String TAG = "DataService";
     private static final String sep = ",";
     private long currentUploadedIndex;
-    private LongSparseArray<String> mUploadIDs=new LongSparseArray<>();
+    private LongSparseArray<String> mUploadIDs = new LongSparseArray<>();
     private boolean hasRun = false;
     private Handler mHandler = new Handler();
     private final IBinder mBinder = new DataService.LocalBinder();
     private DataPresenter mPresenter;
-    private Realm mRealm;
+    private Realm mRealm; //for export
+    private Realm uRealm; //for upload
 
     private UploadServiceBroadcastReceiver uploadServiceBroadcastReceiver =
             new UploadServiceBroadcastReceiver() {
@@ -108,9 +109,9 @@ public class DataService extends Service {
         public void run() {
             getTime();
             System.out.println("an upload");
-            subscribe();
+            uRealm = Realm.getDefaultInstance();
             uploadAllDatasets();
-            unsubscribe();
+            uRealm.close();
             SharedPreferences sharedPref =
                     PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             String stringValue = sharedPref.getString("upload_interval",
@@ -147,11 +148,10 @@ public class DataService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         System.out.println("启动");
         if (!hasRun) {
-            //subscribe();
-//        new Thread(mDataSave).start();
+            // new Thread(mDataSave).start();
             new Thread(mDataExport).start();
             new Thread(mDataUpload).start();
-            //AlarmManagerUtils.getInstance(getApplicationContext()).getUpAlarmManagerWorkOnOthers();
+            // AlarmManagerUtils.getInstance(getApplicationContext()).getUpAlarmManagerWorkOnOthers();
             hasRun = true;
         }
         return super.onStartCommand(intent, flags, startId);
@@ -245,12 +245,12 @@ public class DataService extends Service {
         String filePath = file.getAbsolutePath();
         currentUploadedIndex = index;
         String uploadID = uploadMultipart(this, url, filePath);
-        if(uploadID!=null)
+        if (uploadID != null)
             mUploadIDs.put(index, uploadID);
     }
 
     public void exportAllDatasets() {
-        RealmResults<DataSet> dataSets = getDataSets();
+        RealmResults<DataSet> dataSets = getDataSetsforExport();
         for (int i = 0; i < dataSets.size(); i++) {
             if (!dataSets.get(i).isExported()) {
                 exportDataSet(dataSets.get(i).getIndex(), dataSets.get(i).getName(), dataSets.get(i).getDesc());
@@ -259,9 +259,9 @@ public class DataService extends Service {
     }
 
     public void uploadAllDatasets() {
-        RealmResults<DataSet> dataSets = getDataSets();
+        RealmResults<DataSet> dataSets = getDataSetsforUpload();
         for (int i = 0; i < dataSets.size(); i++) {
-            if ((!dataSets.get(i).isUploaded())&&dataSets.get(i).getIndex()!=0) {
+            if ((!dataSets.get(i).isUploaded()) && (!dataSets.get(i).getName().equals("NewSamples"))) {
                 uploadDataSet(dataSets.get(i).getIndex(), dataSets.get(i).getName(), dataSets.get(i).getDesc());
             }
         }
@@ -382,17 +382,17 @@ public class DataService extends Service {
     }
 
     public void changeDataSetUploadStatus(long index, boolean done) {
-        Realm realm=Realm.getDefaultInstance();
+        Realm realm = Realm.getDefaultInstance();
         DataHelper.updateDataSetUpload(realm, index, done);
         realm.close();
     }
 
-    public void changeDataSetUploadStatus(Realm mRealm, long index, boolean done) {
-        DataHelper.updateDataSetUpload(mRealm, index, done);
+    public RealmResults<DataSet> getDataSetsforExport() {
+        return DataHelper.getAllDataSet(mRealm);
     }
 
-    public RealmResults<DataSet> getDataSets() {
-        return DataHelper.getAllDataSet(mRealm);
+    public RealmResults<DataSet> getDataSetsforUpload() {
+        return DataHelper.getAllDataSet(uRealm);
     }
 
     public void getTime() {
